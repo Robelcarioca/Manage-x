@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>EAU Manage X — Ethiopian Aviation University</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800&family=Barlow:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#040d1a;--ink2:#091828;--ink3:#0f2240;
+  --gold:#e8a020;--gold2:#f5b845;--gd:rgba(232,160,32,.12);
+  --green:#1a7a46;--green2:#22a05a;--grd:rgba(26,122,70,.12);
+  --red:#c0392b;--red2:#e74c3c;--rrd:rgba(192,57,43,.12);
+  --blue:#1565c0;--blue2:#1e88e5;--bld:rgba(21,101,192,.12);
+  --purple:#5c35c2;--purple2:#7c4dff;--prd:rgba(92,53,194,.12);
+  --teal:#006064;--teal2:#00838f;--tld:rgba(0,96,100,.12);
+  --white:#eef2ff;--muted:#6b7a99;
+  --bdr:rgba(255,255,255,.07);--bdr2:rgba(255,255,255,.13);
+  --card:rgba(255,255,255,.033);--card2:rgba(255,255,255,.062);
+  --sw:256px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:14px;}
+body{font-family:'Barlow',sans-serif;background:var(--ink);color:var(--white);min-height:100vh;overflow-x:hidden;}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:translateX(0)}}
+@keyframes floatPlane{0%,100%{transform:translateY(0)rotate(-12deg)}50%{transform:translateY(-20px)rotate(-12deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* SCREENS */
+.scr{display:none;min-height:100vh;}
+.scr.on{display:flex;}
+
+/* ═══════════════ LOGIN ═══════════════ */
+#sl{background:linear-gradient(135deg,#020914 0%,#081530 50%,#040d1a 100%);align-items:stretch;}
+#sl::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 25% 50%,rgba(21,101,192,.15),transparent),radial-gradient(ellipse 40% 40% at 80% 20%,rgba(232,160,32,.06),transparent);pointer-events:none;}
+.ll{flex:1;display:flex;flex-direction:column;justify-content:center;padding:3rem;position:relative;z-index:1;}
+.lr{width:430px;flex-shrink:0;background:rgba(9,24,40,.85);border-left:1px solid var(--bdr);display:flex;flex-direction:column;justify-content:center;padding:3rem 2.5rem;}
+.bg-plane{position:absolute;right:-5%;bottom:-8%;font-size:28rem;opacity:.018;pointer-events:none;animation:floatPlane 11s ease-in-out infinite;}
+.eau-mark{width:72px;height:72px;background:linear-gradient(135deg,rgba(232,160,32,.18),rgba(21,101,192,.25));border:1px solid rgba(232,160,32,.3);border-radius:18px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;box-shadow:0 0 60px rgba(232,160,32,.12);}
+.eau-mark span{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.3rem;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.ll h1{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:3.4rem;line-height:1;letter-spacing:-.01em;}
+.ll h1 span{background:linear-gradient(90deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.ll .tag{font-size:.85rem;color:var(--muted);letter-spacing:.1em;margin-top:.5rem;}
+.ll .feats{margin-top:2.5rem;display:flex;flex-direction:column;gap:.65rem;}
+.feat{display:flex;align-items:center;gap:.65rem;font-size:.82rem;color:rgba(255,255,255,.6);}
+.feat::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0;}
+.ethflag{height:4px;background:linear-gradient(90deg,#078930 33.3%,#FCDD09 33.3% 66.6%,#DA121A 66.6%);border-radius:2px;margin-top:2.5rem;width:120px;}
+/* form */
+.lf h2{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.75rem;margin-bottom:.25rem;}
+.lf .sh{color:var(--muted);font-size:.8rem;margin-bottom:1.6rem;}
+.role-g{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.45rem;margin-bottom:1.5rem;}
+.ro{border:1px solid var(--bdr);border-radius:10px;padding:.7rem .5rem;cursor:pointer;transition:all .17s;text-align:center;}
+.ro:hover{background:var(--card2);}
+.ro.sel{border-color:rgba(232,160,32,.4);background:var(--gd);}
+.ro .ri{font-size:1.3rem;margin-bottom:.28rem;}
+.ro .rn{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:.78rem;line-height:1.2;}
+.ro .rs{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--muted);margin-top:.18rem;}
+.fg{margin-bottom:.9rem;}
+.fg label{display:block;font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-bottom:.38rem;}
+.fg input,.fg select{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--bdr);border-radius:9px;padding:.72rem 1rem;color:var(--white);font-family:'Barlow',sans-serif;font-size:.88rem;outline:none;transition:border-color .18s,box-shadow .18s;}
+.fg input:focus,.fg select:focus{border-color:rgba(232,160,32,.45);box-shadow:0 0 0 3px rgba(232,160,32,.07);}
+.fg input::placeholder{color:rgba(255,255,255,.18);}
+.fg select option{background:#091828;}
+.btn-login{width:100%;padding:.82rem;background:linear-gradient(135deg,#1a3875,#1565c0);border:1px solid rgba(232,160,32,.22);border-radius:10px;color:white;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1rem;letter-spacing:.1em;cursor:pointer;transition:all .22s;margin-top:.4rem;}
+.btn-login:hover{box-shadow:0 8px 30px rgba(232,160,32,.18);transform:translateY(-1px);}
+
+/* ═══════════════ APP ═══════════════ */
+#sa{flex-direction:row;}
+.sidebar{width:var(--sw);flex-shrink:0;background:rgba(2,7,16,.97);border-right:1px solid var(--bdr);display:flex;flex-direction:column;height:100vh;position:sticky;top:0;z-index:60;}
+.sb-top{padding:1.2rem 1.1rem;border-bottom:1px solid var(--bdr);}
+.sb-brand{display:flex;align-items:center;gap:.65rem;margin-bottom:.9rem;}
+.sb-mk{width:33px;height:33px;border-radius:8px;background:linear-gradient(135deg,#1a3875,#1565c0);border:1px solid rgba(232,160,32,.18);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.75rem;color:var(--gold);flex-shrink:0;}
+.sb-nm{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.88rem;line-height:1.18;}
+.sb-nm .sub{font-family:'DM Mono',monospace;font-size:.54rem;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;display:block;}
+.rp{display:flex;align-items:center;gap:.45rem;padding:.38rem .7rem;border-radius:7px;font-size:.75rem;font-weight:600;border:1px solid;}
+.rp-admin{background:rgba(232,160,32,.1);border-color:rgba(232,160,32,.2);color:var(--gold2);}
+.rp-amt{background:rgba(30,136,229,.1);border-color:rgba(30,136,229,.2);color:#60a5fa;}
+.rp-pp{background:rgba(231,76,60,.1);border-color:rgba(231,76,60,.2);color:#fc8181;}
+.rp-av{background:rgba(124,77,255,.1);border-color:rgba(124,77,255,.2);color:#c4b5fd;}
+.rp-af{background:rgba(34,160,90,.1);border-color:rgba(34,160,90,.2);color:#4ade80;}
+.rp-st{background:rgba(0,131,143,.1);border-color:rgba(0,131,143,.2);color:#2dd4bf;}
+.sb-nav{flex:1;overflow-y:auto;padding:.5rem 0;}
+.ns{padding:.5rem 1rem .22rem;font-family:'DM Mono',monospace;font-size:.53rem;letter-spacing:.22em;color:rgba(255,255,255,.18);text-transform:uppercase;}
+.ni{display:flex;align-items:center;gap:.6rem;padding:.5rem 1rem;margin:.04rem .42rem;border-radius:7px;cursor:pointer;font-size:.82rem;color:var(--muted);transition:all .14s;border:1px solid transparent;}
+.ni:hover{background:var(--card2);color:var(--white);}
+.ni.on{background:rgba(232,160,32,.09);color:var(--gold2);border-color:rgba(232,160,32,.12);}
+.ni .ico{font-size:.88rem;width:15px;text-align:center;flex-shrink:0;}
+.ni .bdg{margin-left:auto;background:var(--red2);color:white;font-size:.53rem;padding:.08rem .32rem;border-radius:8px;font-family:'DM Mono',monospace;animation:pulse 2.5s infinite;}
+.ni .bdg.warn{background:rgba(232,160,32,.22);color:var(--gold2);animation:none;}
+.ni .bdg.info{background:var(--bld);color:#60a5fa;animation:none;}
+.sb-usr{padding:.85rem 1.1rem;border-top:1px solid var(--bdr);display:flex;align-items:center;gap:.6rem;}
+.ua{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.7rem;flex-shrink:0;}
+.un{font-size:.77rem;font-weight:600;line-height:1.18;}
+.ur{font-size:.58rem;color:var(--muted);font-family:'DM Mono',monospace;}
+
+/* TOPBAR */
+.topbar{background:rgba(2,7,16,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--bdr);height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 1.6rem;position:sticky;top:0;z-index:50;}
+.tb-ttl{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.15rem;}
+.tb-r{display:flex;align-items:center;gap:.55rem;}
+.tbtn{background:var(--card);border:1px solid var(--bdr);border-radius:7px;padding:.32rem .72rem;color:var(--muted);font-size:.77rem;cursor:pointer;transition:all .14s;font-family:'Barlow',sans-serif;display:flex;align-items:center;gap:.38rem;}
+.tbtn:hover{background:var(--card2);color:var(--white);}
+.tbtn.gold{border-color:rgba(232,160,32,.2);color:var(--gold2);}
+.tbtn.gold:hover{background:var(--gd);}
+.ndot{width:6px;height:6px;background:var(--red2);border-radius:50%;}
+
+/* MAIN WRAP */
+.mw{flex:1;display:flex;flex-direction:column;min-width:0;overflow-y:auto;}
+.page{display:none;padding:1.5rem 1.6rem;animation:fadeIn .25s ease;}
+.page.on{display:block;}
+
+/* PAGE HEADER */
+.ph{margin-bottom:1.4rem;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.85rem;}
+.ph-l .bc{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.28rem;}
+.ph-l h1{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.8rem;letter-spacing:-.01em;}
+.ph-l p{color:var(--muted);font-size:.8rem;margin-top:.18rem;}
+.ph-r{display:flex;align-items:center;gap:.55rem;flex-shrink:0;}
+
+/* KPI CARDS */
+.kg{display:grid;gap:.85rem;margin-bottom:1.1rem;}
+.kg5{grid-template-columns:repeat(5,1fr);}
+.kg4{grid-template-columns:repeat(4,1fr);}
+.kg3{grid-template-columns:repeat(3,1fr);}
+.kc{background:var(--card);border:1px solid var(--bdr);border-radius:11px;padding:1.05rem;position:relative;overflow:hidden;transition:border-color .18s,transform .18s;}
+.kc:hover{border-color:var(--bdr2);transform:translateY(-1px);}
+.kc::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.kc.cg::after{background:linear-gradient(90deg,var(--gold),var(--gold2));}
+.kc.cgr::after{background:linear-gradient(90deg,var(--green),var(--green2));}
+.kc.cr::after{background:linear-gradient(90deg,var(--red),var(--red2));}
+.kc.cb::after{background:linear-gradient(90deg,var(--blue),var(--blue2));}
+.kc.cp::after{background:linear-gradient(90deg,var(--purple),var(--purple2));}
+.kc.ct::after{background:linear-gradient(90deg,var(--teal),var(--teal2));}
+.kl{font-family:'DM Mono',monospace;font-size:.57rem;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:.38rem;}
+.kv{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:2.1rem;line-height:1;}
+.kd{font-size:.68rem;color:var(--muted);margin-top:.28rem;}
+.kd .up{color:var(--green2);}
+.kd .dn{color:var(--red2);}
+.kico{position:absolute;right:.8rem;top:50%;transform:translateY(-50%);font-size:1.7rem;opacity:.08;}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1rem;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1rem;}
+.g60{display:grid;grid-template-columns:1.55fr 1fr;gap:1rem;margin-bottom:1rem;}
+.g40{display:grid;grid-template-columns:1fr 1.5fr;gap:1rem;margin-bottom:1rem;}
+.gcol{display:flex;flex-direction:column;gap:1rem;}
+
+/* PANELS */
+.pnl{background:var(--card);border:1px solid var(--bdr);border-radius:11px;overflow:hidden;margin-bottom:1rem;}
+.pnl:last-child{margin-bottom:0;}
+.ph2{padding:.8rem 1.15rem;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;}
+.ph2 h3{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:.95rem;display:flex;align-items:center;gap:.45rem;}
+.ph2 .ptag{font-family:'DM Mono',monospace;font-size:.56rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
+.pb{padding:1.05rem;}
+
+/* TABS */
+.tabs{display:flex;gap:.2rem;border-bottom:1px solid var(--bdr);padding:0 1.15rem;background:rgba(255,255,255,.02);}
+.tab{padding:.65rem .9rem;font-size:.8rem;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .14s;display:flex;align-items:center;gap:.35rem;white-space:nowrap;}
+.tab:hover{color:var(--white);}
+.tab.on{color:var(--gold2);border-bottom-color:var(--gold2);}
+.tbc{display:none;padding:1.1rem;}
+.tbc.on{display:block;animation:fadeIn .2s ease;}
+
+/* PROGRESS */
+.prog{margin-bottom:.8rem;}
+.prog:last-child{margin-bottom:0;}
+.pl{display:flex;justify-content:space-between;margin-bottom:.28rem;font-size:.78rem;}
+.pl span:last-child{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted);}
+.pt{height:5px;background:rgba(255,255,255,.05);border-radius:3px;overflow:hidden;}
+.pf{height:100%;border-radius:3px;}
+.pfg{background:linear-gradient(90deg,var(--gold),var(--gold2));}
+.pfgr{background:linear-gradient(90deg,var(--green),var(--green2));}
+.pfr{background:linear-gradient(90deg,var(--red),var(--red2));}
+.pfb{background:linear-gradient(90deg,var(--blue),var(--blue2));}
+.pfp{background:linear-gradient(90deg,var(--purple),var(--purple2));}
+.pft{background:linear-gradient(90deg,var(--teal),var(--teal2));}
+
+/* BADGES */
+.b{display:inline-flex;align-items:center;gap:.22rem;font-size:.64rem;font-family:'DM Mono',monospace;padding:.14rem .48rem;border-radius:20px;}
+.b::before{content:'●';font-size:.5rem;}
+.br{background:rgba(192,57,43,.15);color:#e57368;}.br::before{color:var(--red2);}
+.by{background:rgba(232,160,32,.15);color:var(--gold2);}.by::before{color:var(--gold);}
+.bg{background:rgba(26,122,70,.18);color:#4ade80;}.bg::before{color:var(--green2);}
+.bb{background:rgba(21,101,192,.18);color:#60a5fa;}.bb::before{color:var(--blue2);}
+.bpurp{background:rgba(92,53,194,.18);color:#c4b5fd;}.bpurp::before{color:var(--purple2);}
+.bgry{background:rgba(255,255,255,.06);color:var(--muted);}.bgry::before{color:var(--muted);}
+.prio{font-size:.58rem;font-family:'DM Mono',monospace;padding:.1rem .38rem;border-radius:4px;text-transform:uppercase;letter-spacing:.04em;}
+.pcrit{background:rgba(231,76,60,.15);color:#fc8181;border:1px solid rgba(231,76,60,.15);}
+.ph_p{background:rgba(232,160,32,.12);color:var(--gold2);border:1px solid rgba(232,160,32,.15);}
+.pm{background:rgba(21,101,192,.12);color:#60a5fa;border:1px solid rgba(21,101,192,.15);}
+.pl2{background:rgba(255,255,255,.05);color:var(--muted);border:1px solid var(--bdr);}
+.tcat{font-size:.58rem;font-family:'DM Mono',monospace;padding:.1rem .38rem;border-radius:4px;text-transform:uppercase;}
+.tc-cu{background:rgba(232,160,32,.1);color:var(--gold2);}
+.tc-cl{background:rgba(21,101,192,.1);color:#60a5fa;}
+.tc-mn{background:rgba(231,76,60,.1);color:#fc8181;}
+.tc-ev{background:rgba(92,53,194,.1);color:#c4b5fd;}
+.tc-ad{background:rgba(0,131,143,.1);color:#2dd4bf;}
+
+/* TABLES */
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{text-align:left;padding:.52rem .78rem;font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;border-bottom:1px solid var(--bdr);white-space:nowrap;}
+.tbl td{padding:.74rem .78rem;border-bottom:1px solid rgba(255,255,255,.033);vertical-align:middle;font-size:.8rem;}
+.tbl tr:hover td{background:rgba(255,255,255,.018);}
+.tbl tr:last-child td{border-bottom:none;}
+.tm{font-weight:500;}
+.ts{font-size:.65rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.13rem;}
+.av{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:700;flex-shrink:0;}
+
+/* DEPT CARDS */
+.dc{background:var(--card);border:1px solid var(--bdr);border-radius:11px;overflow:hidden;transition:border-color .18s,transform .15s;}
+.dc:hover{transform:translateY(-2px);border-color:var(--bdr2);}
+.dc-pp{border-top:3px solid var(--red2);}
+.dc-av{border-top:3px solid var(--purple2);}
+.dc-af{border-top:3px solid var(--green2);}
+.dc-st{border-top:3px solid var(--teal2);}
+.dc-b{padding:1.05rem;}
+.dc-ico{font-size:1.5rem;margin-bottom:.45rem;}
+.dc-nm{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.98rem;margin-bottom:.12rem;}
+.dc-ci{font-size:.68rem;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:.8rem;}
+.dc-sc{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:2.2rem;line-height:1;margin-bottom:.45rem;}
+.dc-st2{display:flex;gap:1.1rem;margin-top:.65rem;padding-top:.65rem;border-top:1px solid var(--bdr);}
+.dc-s .v{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.05rem;}
+.dc-s .l{font-family:'DM Mono',monospace;font-size:.53rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;}
+
+/* TASK CARDS */
+.tc{background:var(--card);border:1px solid var(--bdr);border-radius:9px;padding:.85rem .95rem;margin-bottom:.6rem;border-left:2px solid transparent;transition:all .16s;}
+.tc:hover{background:var(--card2);}
+.tc.ov{border-left-color:var(--red2);}
+.tc.ds{border-left-color:var(--gold);}
+.tc.ot{border-left-color:var(--green2);}
+.tc.dn{border-left-color:var(--blue2);opacity:.72;}
+.tc-r1{display:flex;align-items:flex-start;justify-content:space-between;gap:.45rem;margin-bottom:.45rem;}
+.tc-t{font-weight:500;font-size:.84rem;}
+.tc-r2{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap;}
+.tc-as{font-size:.7rem;color:var(--muted);display:flex;align-items:center;gap:.3rem;}
+.tc-dl{margin-left:auto;font-family:'DM Mono',monospace;font-size:.66rem;color:var(--muted);}
+
+/* CURRICULUM CARDS */
+.cc{background:var(--card);border:1px solid var(--bdr);border-radius:9px;padding:.95rem;margin-bottom:.65rem;}
+.cc.pend{border-left:3px solid var(--gold);}
+.cc.appd{border-left:3px solid var(--green2);}
+.cc.retd{border-left:3px solid var(--red2);}
+.cc-h{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.45rem;}
+.cc-t{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:.92rem;}
+.cc-m{font-size:.68rem;color:var(--muted);margin-top:.18rem;}
+.cc-act{display:flex;gap:.45rem;margin-top:.65rem;}
+
+/* PERSON CARDS */
+.pcard{background:var(--card);border:1px solid var(--bdr);border-radius:9px;padding:.85rem;display:flex;align-items:center;gap:.8rem;transition:all .16s;}
+.pcard:hover{border-color:var(--bdr2);background:var(--card2);}
+.pcard-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.82rem;flex-shrink:0;}
+.pcard-n{font-weight:600;font-size:.82rem;}
+.pcard-d{font-size:.67rem;color:var(--muted);margin-top:.1rem;}
+.pcard-s{flex-shrink:0;margin-left:auto;}
+
+/* FEED */
+.fi{display:flex;gap:.65rem;padding:.65rem 0;border-bottom:1px solid var(--bdr);}
+.fi:last-child{border-bottom:none;}
+.fi-ic{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.78rem;flex-shrink:0;}
+.fi-t{font-size:.8rem;font-weight:500;}
+.fi-s{font-size:.68rem;color:var(--muted);margin-top:.1rem;}
+.fi-tm{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);flex-shrink:0;margin-left:auto;}
+
+/* UPDATE STREAM */
+.upd{background:var(--card);border:1px solid var(--bdr);border-radius:9px;padding:.82rem .95rem;display:flex;gap:.8rem;align-items:flex-start;margin-bottom:.6rem;}
+.upd.new{border-left:3px solid var(--gold);background:rgba(232,160,32,.03);}
+.upd.urg{border-left:3px solid var(--red2);background:rgba(192,57,43,.04);}
+.upd-ic{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.88rem;flex-shrink:0;}
+.upd-b h4{font-family:'Barlow Condensed',sans-serif;font-size:.92rem;font-weight:600;}
+.upd-b p{font-size:.73rem;color:var(--muted);margin-top:.12rem;}
+.upd-m{margin-left:auto;text-align:right;flex-shrink:0;}
+.upd-dp{font-family:'DM Mono',monospace;font-size:.56rem;padding:.1rem .36rem;border-radius:4px;display:inline-block;margin-bottom:.22rem;}
+.upd-tm{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);}
+
+/* REMINDER TIMELINE */
+.rl{display:flex;flex-direction:column;gap:.52rem;}
+.ri{display:flex;align-items:center;gap:.75rem;}
+.rd{width:31px;height:31px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:.58rem;font-weight:500;flex-shrink:0;border:2px solid;}
+.r-sent{background:rgba(26,122,70,.12);border-color:var(--green2);color:#4ade80;}
+.r-pend{background:rgba(232,160,32,.1);border-color:var(--gold);color:var(--gold2);}
+.r-over{background:var(--red);border-color:var(--red2);color:white;}
+.ri-info h4{font-family:'Barlow Condensed',sans-serif;font-size:.86rem;margin:0;}
+.ri-info p{font-size:.68rem;color:var(--muted);margin:.08rem 0 0;}
+
+/* REPORT CARDS */
+.rc{background:var(--card);border:1px solid var(--bdr);border-radius:9px;padding:.95rem;display:flex;align-items:center;gap:.8rem;cursor:pointer;transition:all .16s;margin-bottom:.6rem;}
+.rc:hover{border-color:rgba(232,160,32,.2);background:rgba(232,160,32,.025);}
+.rc-ic{width:40px;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex-shrink:0;}
+.rc-t{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:.9rem;}
+.rc-d{font-size:.68rem;color:var(--muted);margin-top:.1rem;}
+.rc-a{margin-left:auto;font-size:.75rem;color:var(--gold2);font-family:'Barlow Condensed',sans-serif;font-weight:600;}
+
+/* DONUT */
+.dnt-w{display:flex;align-items:center;gap:1.1rem;}
+.dnt{position:relative;width:90px;height:90px;flex-shrink:0;}
+.dnt svg{transform:rotate(-90deg);}
+.dnt-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.dnt-c .dv{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.4rem;line-height:1;}
+.dnt-c .ds{font-size:.56rem;color:var(--muted);font-family:'DM Mono',monospace;}
+.leg{flex:1;}
+.li{display:flex;align-items:center;gap:.4rem;margin-bottom:.4rem;font-size:.76rem;}
+.li-d{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.li-v{margin-left:auto;font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted);}
+
+/* NOTIF DRAWER */
+.ndwr{display:none;position:fixed;top:54px;right:0;width:350px;height:calc(100vh - 54px);background:rgba(3,8,18,.98);border-left:1px solid var(--bdr);z-index:55;overflow-y:auto;flex-direction:column;}
+.ndwr.on{display:flex;animation:slideIn .2s ease;}
+.ndwr-h{padding:.9rem 1.15rem;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:rgba(3,8,18,.98);z-index:1;}
+.ndwr-h h3{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1rem;display:flex;align-items:center;gap:.45rem;}
+.ncnt{background:var(--red2);color:white;font-family:'DM Mono',monospace;font-size:.52rem;padding:.1rem .38rem;border-radius:8px;}
+.nit{padding:.8rem 1.15rem;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;transition:background .13s;}
+.nit:hover{background:var(--card);}
+.nit.unr{border-left:3px solid var(--gold);}
+.ni-t{font-size:.8rem;font-weight:500;}
+.ni-s{font-size:.68rem;color:var(--muted);margin-top:.1rem;}
+.ni-row{display:flex;align-items:center;gap:.45rem;margin-top:.28rem;}
+.ni-dp{font-family:'DM Mono',monospace;font-size:.56rem;padding:.08rem .35rem;border-radius:3px;}
+.ni-tm{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);margin-left:auto;}
+
+/* MODALS */
+.ovl{display:none;position:fixed;inset:0;z-index:200;background:rgba(1,4,10,.88);backdrop-filter:blur(7px);align-items:center;justify-content:center;}
+.ovl.on{display:flex;animation:fadeIn .18s ease;}
+.mdl{background:#0a1a2e;border:1px solid rgba(232,160,32,.14);border-radius:15px;width:640px;max-width:95vw;max-height:92vh;overflow-y:auto;box-shadow:0 30px 70px rgba(0,0,0,.6);}
+.mdl-lg{width:780px;}
+.mh{padding:1.2rem 1.45rem;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#0a1a2e;z-index:1;}
+.mh h2{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.3rem;display:flex;align-items:center;gap:.5rem;}
+.mcl{background:none;border:1px solid var(--bdr);color:var(--muted);width:27px;height:27px;border-radius:6px;cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:all .13s;}
+.mcl:hover{border-color:var(--red2);color:var(--red2);}
+.mb{padding:1.4rem 1.45rem;}
+.mfg{margin-bottom:1rem;}
+.mfg label{display:block;font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.38rem;}
+.mfg input,.mfg select,.mfg textarea{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--bdr);border-radius:8px;padding:.68rem .95rem;color:var(--white);font-family:'Barlow',sans-serif;font-size:.86rem;outline:none;transition:border-color .18s;}
+.mfg input:focus,.mfg select:focus,.mfg textarea:focus{border-color:rgba(232,160,32,.4);box-shadow:0 0 0 3px rgba(232,160,32,.07);}
+.mfg input::placeholder,.mfg textarea::placeholder{color:rgba(255,255,255,.17);}
+.mfg select option{background:#0a1a2e;}
+.mfg textarea{resize:vertical;min-height:75px;line-height:1.55;}
+.mg2{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+.mft{padding:.95rem 1.45rem;border-top:1px solid var(--bdr);display:flex;gap:.6rem;justify-content:flex-end;}
+
+/* REMINDER CHECKS */
+.rcs{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.38rem;}
+.rck{display:flex;align-items:center;gap:.3rem;background:rgba(255,255,255,.04);border:1px solid var(--bdr);border-radius:6px;padding:.3rem .55rem;cursor:pointer;font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);transition:all .13s;}
+.rck.on{background:var(--gd);border-color:rgba(232,160,32,.28);color:var(--gold2);}
+.rck .rb{width:10px;height:10px;border-radius:3px;border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:.52rem;}
+.rck.on .rb{background:var(--gold);border-color:var(--gold);color:#000;}
+
+/* BTNS */
+.btn{padding:.52rem 1.15rem;border-radius:8px;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:.92rem;letter-spacing:.05em;cursor:pointer;border:1px solid var(--bdr);transition:all .17s;display:inline-flex;align-items:center;gap:.38rem;}
+.bgh{background:rgba(255,255,255,.04);color:var(--muted);}
+.bgh:hover{background:rgba(255,255,255,.08);color:var(--white);}
+.bpr{background:linear-gradient(135deg,#1a3875,#1565c0);border-color:rgba(232,160,32,.2);color:var(--gold2);}
+.bpr:hover{box-shadow:0 5px 20px rgba(232,160,32,.16);transform:translateY(-1px);}
+.bsc{background:linear-gradient(135deg,#1a5236,#1a7a46);border-color:rgba(34,160,90,.22);color:#4ade80;}
+.bdn{background:linear-gradient(135deg,#7a1a1a,#c0392b);border-color:rgba(231,76,60,.22);color:#fc8181;}
+.bgo{background:linear-gradient(135deg,#7a5000,#c8850a);border-color:rgba(232,160,32,.28);color:#111;}
+.bsm{padding:.3rem .7rem;font-size:.78rem;}
+
+/* DB SCHEMA */
+.dbt{background:var(--card);border:1px solid var(--bdr);border-radius:9px;overflow:hidden;margin-bottom:.9rem;}
+.dbth{padding:.7rem .95rem;background:rgba(21,101,192,.1);border-bottom:1px solid var(--bdr);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.92rem;display:flex;align-items:center;gap:.45rem;}
+.dbf{display:flex;align-items:center;padding:.52rem .95rem;border-bottom:1px solid rgba(255,255,255,.035);font-size:.78rem;}
+.dbf:last-child{border-bottom:none;}
+.dbfn{font-family:'DM Mono',monospace;font-size:.74rem;color:var(--gold2);min-width:155px;}
+.dbft{font-family:'DM Mono',monospace;font-size:.7rem;color:#60a5fa;min-width:95px;}
+.dbfd{color:var(--muted);font-size:.72rem;}
+.dbpk{background:rgba(232,160,32,.15);color:var(--gold2);font-size:.52rem;padding:.06rem .28rem;border-radius:3px;font-family:'DM Mono',monospace;margin-left:.45rem;}
+.dbfk{background:rgba(21,101,192,.15);color:#60a5fa;font-size:.52rem;padding:.06rem .28rem;border-radius:3px;font-family:'DM Mono',monospace;margin-left:.45rem;}
+
+/* SUGGESTION CARDS */
+.sug{background:var(--card);border:1px solid var(--bdr);border-radius:9px;padding:1rem;margin-bottom:.7rem;border-left:3px solid;}
+.sug.sg{border-left-color:var(--gold);}
+.sug.sb2{border-left-color:var(--blue2);}
+.sug.sgr{border-left-color:var(--green2);}
+.sug.sp{border-left-color:var(--purple2);}
+.sug h4{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.96rem;margin-bottom:.28rem;}
+.sug p{font-size:.78rem;color:var(--muted);line-height:1.62;}
+
+/* PRINT */
+@media print{
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  body{background:#fff!important;color:#111!important;}
+  #sl,.sidebar,.topbar,.ovl,.ndwr,.tbtn{display:none!important;}
+  #sa{display:block!important;}
+  .mw{overflow:visible!important;}
+  .page{display:none!important;padding:0!important;}
+  .page.ptgt{display:block!important;}
+  .prh{display:flex!important;align-items:center;justify-content:space-between;padding-bottom:11pt;margin-bottom:14pt;border-bottom:2.5pt solid #091828;}
+  .prh h1{font-size:18pt;font-weight:700;color:#091828;font-family:'Barlow Condensed',Arial,sans-serif;}
+  .prh .ps{font-size:7pt;color:#666;font-family:'DM Mono',monospace;letter-spacing:.15em;text-transform:uppercase;}
+  .prh .prl{width:40pt;height:40pt;background:#091828;border-radius:6pt;display:flex;align-items:center;justify-content:center;}
+  .prh .prl span{color:#e8a020;font-weight:800;font-size:8pt;font-family:'Barlow Condensed',Arial,sans-serif;}
+  .prh .prfl{height:4pt;width:60pt;background:linear-gradient(90deg,#078930 33%,#FCDD09 33% 66%,#DA121A 66%);margin-top:3pt;margin-left:auto;}
+  .pnl,.kc,.dc,.cc,.tc,.pcard{background:#f7f9fc!important;border:1pt solid #ddd!important;border-radius:4pt!important;page-break-inside:avoid;}
+  .ph2{background:#eef1f8!important;border-bottom:1pt solid #ddd!important;padding:5pt 8pt!important;}
+  .ph2 h3,.tm,.kv,.dc-nm,.dc-sc{color:#111!important;}
+  .muted,.kl,.ts,.dc-ci,.pl span:last-child{color:#666!important;}
+  .tbl th{background:#091828!important;color:#fff!important;font-size:6pt!important;padding:3.5pt 5pt!important;}
+  .tbl td{font-size:7pt!important;padding:3.5pt 5pt!important;border-bottom:.4pt solid #eee!important;color:#111!important;}
+  .g2,.g60,.g40{grid-template-columns:1fr 1fr!important;gap:6pt!important;}
+  .kg5{grid-template-columns:repeat(5,1fr)!important;}
+  .kg4{grid-template-columns:repeat(4,1fr)!important;}
+  .pf{print-color-adjust:exact!important;}
+  .pfg{background:#e8a020!important;}.pfgr{background:#1a7a46!important;}.pfr{background:#c0392b!important;}.pfb{background:#1565c0!important;}.pfp{background:#5c35c2!important;}.pft{background:#006064!important;}
+  .b{font-size:6pt!important;}
+  .br{background:#fde8e8!important;color:#c0392b!important;}
+  .bg{background:#e8f5ee!important;color:#1a7a46!important;}
+  .by{background:#fef3dc!important;color:#b57d10!important;}
+  .bb{background:#e8f0fb!important;color:#1565c0!important;}
+  .prft{display:flex!important;justify-content:space-between;border-top:.8pt solid #ccc;margin-top:14pt;padding-top:5pt;font-size:6pt;color:#999;font-family:'DM Mono',monospace;}
+  @page{size:A4 landscape;margin:1.1cm 1.4cm;}
+}
+/* utils */
+.mono{font-family:'DM Mono',monospace;}
+.tg{color:var(--gold2);}.tgr{color:#4ade80;}.tr{color:#fc8181;}.tb{color:#60a5fa;}.tm2{color:var(--muted);}
+.flex{display:flex;align-items:center;}
+.fsb{display:flex;align-items:center;justify-content:space-between;}
+.g5{gap:.5rem;}.g8{gap:.8rem;}
+.mt1{margin-top:.75rem;}.mb1{margin-bottom:.75rem;}
+.sep{border-top:1px solid var(--bdr);margin:.85rem 0;}
+</style>
+</head>
+<body>
+<!-- ═══════════ LOGIN ═══════════ -->
+<div class="scr on" id="sl">
+  <div class="ll">
+    <div class="bg-plane">✈</div>
+    <div class="eau-mark"><span>EAU</span></div>
+    <h1>Manage<span>X</span></h1>
+    <div class="tag">Ethiopian Aviation University · AMT Division</div>
+    <div class="feats">
+      <div class="feat">Department Management — Students, Teachers &amp; Classes</div>
+      <div class="feat">Curriculum Monitoring — Submit, Review &amp; Approve</div>
+      <div class="feat">Task Management — Assign, Track &amp; Auto-Remind</div>
+      <div class="feat">Live Reporting — AMT Head updates in real-time</div>
+      <div class="feat">ICAO/ECAA Compliance Tracking</div>
+    </div>
+    <div class="ethflag"></div>
+  </div>
+  <div class="lr">
+    <div class="lf">
+      <h2>Sign In</h2>
+      <div class="sh">Select your role and enter your credentials</div>
+      <div class="role-g" id="rg">
+        <div class="ro sel" onclick="pickRole(this,'admin')"><div class="ri">🏛</div><div class="rn">University<br>Manager</div><div class="rs">Full access</div></div>
+        <div class="ro" onclick="pickRole(this,'amt')"><div class="ri">✈</div><div class="rn">AMT Head</div><div class="rs">Division monitor</div></div>
+        <div class="ro" onclick="pickRole(this,'pp')"><div class="ri">🔥</div><div class="rn">Powerplant<br>Chief</div><div class="rs">CI · Dept head</div></div>
+        <div class="ro" onclick="pickRole(this,'av')"><div class="ri">📡</div><div class="rn">Avionics<br>Chief</div><div class="rs">CI · Dept head</div></div>
+        <div class="ro" onclick="pickRole(this,'af')"><div class="ri">🛩</div><div class="rn">Airframe<br>Chief</div><div class="rs">CI · Dept head</div></div>
+        <div class="ro" onclick="pickRole(this,'st')"><div class="ri">🔩</div><div class="rn">Structure<br>Chief</div><div class="rs">CI · Dept head</div></div>
+      </div>
+      <div class="fg"><label>Email Address</label><input type="email" id="lem" value="admin@eau.edu.et"></div>
+      <div class="fg"><label>Password</label><input type="password" value="••••••••"></div>
+      <button class="btn-login" onclick="doLogin()">Sign In →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ APP ═══════════ -->
+<div class="scr" id="sa">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-top">
+      <div class="sb-brand"><div class="sb-mk">EAU</div><div class="sb-nm">Manage X<span class="sub">Aviation University</span></div></div>
+      <div class="rp" id="rp-badge">🏛 University Manager</div>
+    </div>
+    <nav class="sb-nav" id="sb-nav"></nav>
+    <div class="sb-usr">
+      <div class="ua" id="sb-av" style="background:linear-gradient(135deg,#e8a020,#1a3875)">MA</div>
+      <div><div class="un" id="sb-nm">Mekdes Alemu</div><div class="ur" id="sb-rl">University Manager</div></div>
+    </div>
+  </aside>
+
+  <!-- MAIN WRAP -->
+  <div class="mw">
+    <div class="topbar">
+      <div class="tb-ttl" id="tb-ttl">Dashboard</div>
+      <div class="tb-r">
+        <button class="tbtn" onclick="toggleNotif()">🔔 <span class="ndot"></span></button>
+        <button class="tbtn gold" onclick="openPrint()">🖨 Print</button>
+        <button class="tbtn" onclick="doLogout()">⬅ Sign Out</button>
+      </div>
+    </div>
+
+    <!-- ====== ADMIN: DASHBOARD ====== -->
+    <div class="page on" id="pg-admin-dash">
+      <div class="prh" style="display:none" id="prh-admin-dash"><div><h1>University Manager Dashboard</h1><div class="ps">Ethiopian Aviation University · AMT Division · Full Overview</div></div><div><div class="prl"><span>EAU</span></div><div class="prfl"></div><div class="ps" id="ptm-admin-dash" style="margin-top:4pt;text-align:right"></div></div></div>
+      <div class="ph"><div class="ph-l"><div class="bc">EAU / Admin / Dashboard</div><h1>University Manager Dashboard</h1><p>Full AMT Division overview — Semester 2, 2024/25</p></div></div>
+      <div class="kg kg5">
+        <div class="kc cg"><div class="kl">Overall Score</div><div class="kv tg">86.3</div><div class="kd"><span class="up">▲ 2.1</span> vs last sem.</div><div class="kico">⭐</div></div>
+        <div class="kc cgr"><div class="kl">Tasks On Track</div><div class="kv tgr">94</div><div class="kd"><span class="up">▲ 7</span> this week</div><div class="kico">✅</div></div>
+        <div class="kc cr"><div class="kl">Overdue Tasks</div><div class="kv tr">5</div><div class="kd"><span class="dn">▲ 2</span> new this week</div><div class="kico">⚠️</div></div>
+        <div class="kc cb"><div class="kl">Curriculum Progress</div><div class="kv tb">71%</div><div class="kd"><span class="up">▲ 6%</span> this month</div><div class="kico">📚</div></div>
+        <div class="kc cp"><div class="kl">Discipline Index</div><div class="kv tg">89</div><div class="kd"><span class="up">▲ 1.2 pts</span> this quarter</div><div class="kico">🎖</div></div>
+      </div>
+      <div class="g4 mb1">
+        <div class="dc dc-pp"><div class="dc-b"><div class="dc-ico">🔥</div><div class="dc-nm tr">Powerplant</div><div class="dc-ci">Chief: Bereket Tadesse</div><div class="dc-sc tr">91.4</div><div class="prog"><div class="pl"><span style="font-size:.7rem">Curriculum</span><span>87%</span></div><div class="pt"><div class="pf pfr" style="width:87%"></div></div></div><div class="dc-st2"><div class="dc-s"><div class="v">28</div><div class="l">Tasks</div></div><div class="dc-s"><div class="v tr">2</div><div class="l">Overdue</div></div><div class="dc-s"><div class="v tgr">4</div><div class="l">Teachers</div></div><div class="dc-s"><div class="v tb">32</div><div class="l">Students</div></div></div></div></div>
+        <div class="dc dc-av"><div class="dc-b"><div class="dc-ico">📡</div><div class="dc-nm" style="color:#c4b5fd">Avionics</div><div class="dc-ci">Chief: Hiwot Girma</div><div class="dc-sc" style="color:#c4b5fd">88.7</div><div class="prog"><div class="pl"><span style="font-size:.7rem">Curriculum</span><span>74%</span></div><div class="pt"><div class="pf pfp" style="width:74%"></div></div></div><div class="dc-st2"><div class="dc-s"><div class="v">24</div><div class="l">Tasks</div></div><div class="dc-s"><div class="v tr">1</div><div class="l">Overdue</div></div><div class="dc-s"><div class="v tgr">5</div><div class="l">Teachers</div></div><div class="dc-s"><div class="v tb">28</div><div class="l">Students</div></div></div></div></div>
+        <div class="dc dc-af"><div class="dc-b"><div class="dc-ico">🛩</div><div class="dc-nm tgr">Airframe</div><div class="dc-ci">Chief: Biruk Tesfaye</div><div class="dc-sc tgr">93.2</div><div class="prog"><div class="pl"><span style="font-size:.7rem">Curriculum</span><span>82%</span></div><div class="pt"><div class="pf pfgr" style="width:82%"></div></div></div><div class="dc-st2"><div class="dc-s"><div class="v">31</div><div class="l">Tasks</div></div><div class="dc-s"><div class="v" style="color:var(--gold2)">1</div><div class="l">Overdue</div></div><div class="dc-s"><div class="v tgr">5</div><div class="l">Teachers</div></div><div class="dc-s"><div class="v tb">35</div><div class="l">Students</div></div></div></div></div>
+        <div class="dc dc-st"><div class="dc-b"><div class="dc-ico">🔩</div><div class="dc-nm" style="color:#2dd4bf">Structure</div><div class="dc-ci">Chief: Yonas Alemu</div><div class="dc-sc" style="color:#2dd4bf">84.1</div><div class="prog"><div class="pl"><span style="font-size:.7rem">Curriculum</span><span>66%</span></div><div class="pt"><div class="pf pft" style="width:66%"></div></div></div><div class="dc-st2"><div class="dc-s"><div class="v">22</div><div class="l">Tasks</div></div><div class="dc-s"><div class="v tr">2</div><div class="l">Overdue</div></div><div class="dc-s"><div class="v tgr">4</div><div class="l">Teachers</div></div><div class="dc-s"><div class="v tb">27</div><div class="l">Students</div></div></div></div></div>
+      </div>
+      <div class="g60">
+        <div class="pnl"><div class="ph2"><h3>All Department Tasks</h3><span class="ptag">105 TOTAL</span></div><div style="overflow-x:auto"><table class="tbl" id="admin-tbl"></table></div></div>
+        <div class="gcol">
+          <div class="pnl"><div class="ph2"><h3>Task Status Distribution</h3></div><div class="pb"><div class="dnt-w"><div class="dnt"><svg width="90" height="90" viewBox="0 0 90 90"><circle cx="45" cy="45" r="34" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="11"/><circle cx="45" cy="45" r="34" fill="none" stroke="#4ade80" stroke-width="11" stroke-dasharray="129 85"/><circle cx="45" cy="45" r="34" fill="none" stroke="#e8a020" stroke-width="11" stroke-dasharray="43 171" stroke-dashoffset="-129"/><circle cx="45" cy="45" r="34" fill="none" stroke="#e74c3c" stroke-width="11" stroke-dasharray="17 197" stroke-dashoffset="-172"/><circle cx="45" cy="45" r="34" fill="none" stroke="#60a5fa" stroke-width="11" stroke-dasharray="25 189" stroke-dashoffset="-189"/></svg><div class="dnt-c"><div class="dv">105</div><div class="ds">TASKS</div></div></div><div class="leg"><div class="li"><div class="li-d" style="background:#4ade80"></div>On Track<div class="li-v">57</div></div><div class="li"><div class="li-d" style="background:#e8a020"></div>Due Soon<div class="li-v">19</div></div><div class="li"><div class="li-d" style="background:#e74c3c"></div>Overdue<div class="li-v">5</div></div><div class="li"><div class="li-d" style="background:#60a5fa"></div>Completed<div class="li-v">24</div></div></div></div></div></div>
+          <div class="pnl"><div class="ph2"><h3>Recent Activity</h3></div><div class="pb" id="admin-feed"></div></div>
+        </div>
+      </div>
+      <div class="prft" style="display:none"><span>EAU Manage X · University Manager Report · Confidential</span><span id="pft-admin-dash"></span></div>
+    </div>
+
+    <!-- ====== ADMIN: REPORTS ====== -->
+    <div class="page" id="pg-admin-rep">
+      <div class="ph"><div class="ph-l"><div class="bc">EAU / Admin / Reports</div><h1>Institutional Reports</h1><p>Auto-generated performance, compliance and analytics reports</p></div></div>
+      <div class="g2">
+        <div>
+          <div class="mono mb1" style="font-size:.58rem;color:var(--muted);letter-spacing:.16em;text-transform:uppercase">PDF Reports</div>
+          <div class="rc" onclick="showToast('Generating PDF...')"><div class="rc-ic" style="background:rgba(192,57,43,.15)">📄</div><div><div class="rc-t">Executive Performance Summary</div><div class="rc-d">All 4 departments · KPIs · Semester 2 · Full analytics</div></div><div class="rc-a">↓ PDF</div></div>
+          <div class="rc" onclick="showToast('Generating PDF...')"><div class="rc-ic" style="background:rgba(192,57,43,.15)">📄</div><div><div class="rc-t">ECAA Ministry Compliance Report</div><div class="rc-d">Q1 2025 · Safety &amp; curriculum standards compliance</div></div><div class="rc-a">↓ PDF</div></div>
+          <div class="rc" onclick="showToast('Generating PDF...')"><div class="rc-ic" style="background:rgba(192,57,43,.15)">📄</div><div><div class="rc-t">Curriculum Completion Report</div><div class="rc-d">Module progress by department &amp; instructor</div></div><div class="rc-a">↓ PDF</div></div>
+          <div class="rc" onclick="showToast('Generating PDF...')"><div class="rc-ic" style="background:rgba(192,57,43,.15)">📄</div><div><div class="rc-t">ICAO Accreditation Readiness</div><div class="rc-d">Compliance checklist, evidence docs &amp; gap analysis</div></div><div class="rc-a">↓ PDF</div></div>
+        </div>
+        <div>
+          <div class="mono mb1" style="font-size:.58rem;color:var(--muted);letter-spacing:.16em;text-transform:uppercase">Excel / Data Exports</div>
+          <div class="rc" onclick="showToast('Exporting XLSX...')"><div class="rc-ic" style="background:rgba(26,122,70,.15)">📊</div><div><div class="rc-t">Task Master Sheet</div><div class="rc-d">All 105 tasks · Status, deadlines, assignees, categories</div></div><div class="rc-a">↓ XLSX</div></div>
+          <div class="rc" onclick="showToast('Exporting...')"><div class="rc-ic" style="background:rgba(26,122,70,.15)">📊</div><div><div class="rc-t">Student Performance Data</div><div class="rc-d">All 122 students · GPA, attendance, at-risk flags</div></div><div class="rc-a">↓ XLSX</div></div>
+          <div class="rc" onclick="showToast('Exporting...')"><div class="rc-ic" style="background:rgba(26,122,70,.15)">📊</div><div><div class="rc-t">Teacher Effectiveness Report</div><div class="rc-d">18 instructors · Task completion, class delivery scores</div></div><div class="rc-a">↓ XLSX</div></div>
+          <div class="rc" onclick="showToast('Exporting CSV...')"><div class="rc-ic" style="background:rgba(26,122,70,.15)">📊</div><div><div class="rc-t">Audit Log Export</div><div class="rc-d">Full action history · Last 90 days · All users</div></div><div class="rc-a">↓ CSV</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== ADMIN: SYSTEM DESIGN ====== -->
+    <div class="page" id="pg-admin-sys">
+      <div class="ph"><div class="ph-l"><div class="bc">EAU / Admin / System Design</div><h1>System Architecture &amp; Improvements</h1><p>Database schema, suggested features, hierarchy design, and automation opportunities</p></div></div>
+      <div class="pnl mb1"><div class="ph2"><h3>🏗 Organizational Hierarchy &amp; Workflow</h3></div><div class="pb">
+        <div style="background:rgba(21,101,192,.06);border:1px solid rgba(21,101,192,.14);border-radius:9px;padding:1.1rem;font-family:'DM Mono',monospace;font-size:.76rem;line-height:1.95;overflow-x:auto">
+<span class="tg">UNIVERSITY MANAGER</span>  (Super Admin — full read/write access to all modules)
+  └── <span class="tb">AMT HEAD</span>  (Division head — monitors 4 depts, approves curriculum, reviews reports)
+        ├── <span class="tr">POWERPLANT CHIEF INSTRUCTOR</span>  (Manages dept · Creates tasks · Submits curriculum)
+        │     ├── Instructors / Teachers  (Assigned tasks, manage classes, update students)
+        │     └── Students  (Enrolled, tracked by GPA, attendance, at-risk AI flag)
+        ├── <span style="color:#c4b5fd">AVIONICS CHIEF INSTRUCTOR</span>
+        │     ├── Instructors / Teachers
+        │     └── Students
+        ├── <span class="tgr">AIRFRAME CHIEF INSTRUCTOR</span>
+        │     ├── Instructors / Teachers
+        │     └── Students
+        └── <span style="color:#2dd4bf">STRUCTURE CHIEF INSTRUCTOR</span>
+              ├── Instructors / Teachers
+              └── Students
+
+<span style="color:rgba(255,255,255,.3)">DATA FLOW:</span>
+  CI creates task  →  teacher assigned  →  reminders fire at configured intervals  →  task completed  →  CI notified  →  AMT auto-report
+  CI submits curriculum update  →  AMT Head reviews  →  Approve / Return with notes  →  CI notified  →  version archived
+  Deadline passes unmet  →  24h escalation push  →  CI + AMT Head alerted  →  shown in overdue report
+  Weekly cron  →  auto-generates PDF report  →  delivered to AMT Head email at 07:00 Monday
+        </div>
+      </div></div>
+      <div class="g2">
+        <div>
+          <div class="mono mb1" style="font-size:.58rem;color:var(--muted);letter-spacing:.16em;text-transform:uppercase">💡 Suggested Feature Improvements</div>
+          <div class="sug sg"><h4>🤖 AI Risk Detection Engine</h4><p>Predict tasks likely to go overdue using instructor workload history, curriculum complexity, and past deadline reliability. Flag at-risk items 5+ days early so AMT Head can intervene. Shown as red risk scores on each task.</p></div>
+          <div class="sug sb2"><h4>📱 Mobile Push Notifications (FCM)</h4><p>Firebase Cloud Messaging sends push alerts directly to instructor phones when tasks are assigned, approaching deadlines, or curriculum updates are approved. Works offline — queued and delivered when back online.</p></div>
+          <div class="sug sgr"><h4>📊 Student Progress Analytics</h4><p>Track per-student attendance, assessment scores, lab hours, and pass/fail predictions. Auto-alert CIs when any student crosses an at-risk threshold before exam season. Displayed on CI student tab.</p></div>
+          <div class="sug sp"><h4>🔄 Curriculum Versioning System</h4><p>Every curriculum update creates a diff-tracked version. AMT Head compares current vs. previous side by side before approval. Full audit trail stored — required for ICAO/ECAA accreditation evidence.</p></div>
+        </div>
+        <div>
+          <div class="mono mb1" style="font-size:.58rem;color:var(--muted);letter-spacing:.16em;text-transform:uppercase">⚙️ Automation Features</div>
+          <div class="sug sb2"><h4>⏰ Smart Reminder Engine (BullMQ)</h4><p>Job queues fire reminders at 30d / 15d / 7d / 3d / 1d / same-day / overdue-24h via email + push + in-app. Auto-escalates to AMT Head if task is unaddressed 48h after overdue. Configurable per task.</p></div>
+          <div class="sug sg"><h4>📋 Weekly Auto-Report (Cron)</h4><p>Every Monday 07:00, cron generates a PDF summary of all departments' task completions, overdue counts, curriculum progress, and new at-risk students. Emailed to AMT Head and Admin automatically.</p></div>
+          <div class="sug sgr"><h4>🎯 Hoshin Kanri Goal Cascade</h4><p>ICAO accreditation goals cascade to department-level curriculum milestones, which cascade to individual instructor tasks. Every action is traceable to a strategic objective. Shown on admin strategic goals page.</p></div>
+          <div class="sug sp"><h4>🏆 Kaizen Performance Scoring</h4><p>Weekly automated computation of each instructor's and department's score based on on-time completion rate, curriculum adherence, and student pass rates. Discipline Index drives department ranking.</p></div>
+        </div>
+      </div>
+      <div class="mono mb1" style="font-size:.58rem;color:var(--muted);letter-spacing:.16em;text-transform:uppercase">🗄 Database Schema Design</div>
+      <div class="g3">
+        <div>
+          <div class="dbt"><div class="dbth">📋 users</div>
+            <div class="dbf"><div class="dbfn">id<span class="dbpk">PK</span></div><div class="dbft">UUID</div><div class="dbfd">Primary identifier</div></div>
+            <div class="dbf"><div class="dbfn">institution_id<span class="dbfk">FK</span></div><div class="dbft">UUID</div><div class="dbfd">Multi-tenant isolation</div></div>
+            <div class="dbf"><div class="dbfn">email</div><div class="dbft">VARCHAR</div><div class="dbfd">Unique login email</div></div>
+            <div class="dbf"><div class="dbfn">role</div><div class="dbft">ENUM</div><div class="dbfd">admin / amt / ci / instructor</div></div>
+            <div class="dbf"><div class="dbfn">department_id<span class="dbfk">FK</span></div><div class="dbft">UUID</div><div class="dbfd">Links to department</div></div>
+            <div class="dbf"><div class="dbfn">performance_score</div><div class="dbft">DECIMAL</div><div class="dbfd">Kaizen-computed weekly</div></div>
+            <div class="dbf"><div class="dbfn">fcm_token</div><div class="dbft">VARCHAR</div><div class="dbfd">Firebase push token</div></div>
+          </div>
+          <div class="dbt"><div class="dbth">🏢 departments</div>
+            <div class="dbf"><div class="dbfn">id<span class="dbpk">PK</span></div><div class="dbft">UUID</div><div class="dbfd">Dept identifier</div></div>
+            <div class="dbf"><div class="dbfn">name</div><div class="dbft">VARCHAR</div><div class="dbfd">Powerplant/Avionics/...</div></div>
+            <div class="dbf"><div class="dbfn">chief_instructor_id<span class="dbfk">FK</span></div><div class="dbft">UUID</div><div class="dbfd">Head of department</div></div>
+            <div class="dbf"><div class="dbfn">efficiency_score</div><div class="dbft">DECIMAL</div><div class="dbfd">Auto-computed weekly</div></div>
+            <div class="dbf"><div class="dbfn">discipline_index</div><div class="dbft">DECIMAL</div><div class="dbfd">Deadline reliability metric</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="dbt"><div class="dbth">✅ tasks</div>
+            <div class="dbf"><div class="dbfn">id<span class="dbpk">PK</span></div><div class="dbft">UUID</div><div class="dbfd">Task identifier</div></div>
+            <div class="dbf"><div class="dbfn">department_id<span class="dbfk">FK</span></div><div class="dbft">UUID</div><div class="dbfd">Which department</div></div>
+            <div class="dbf"><div class="dbfn">created_by<span class="dbfk">FK</span></div><div class="dbft">UUID</div><div class="dbfd">Chief Instructor</div></div>
+            <div class="dbf"><div class="dbfn">assigned_to<span class="dbfk">FK</span></div><div class="dbft">UUID</div><div class="dbfd">Teacher/instructor</div></div>
+            <div class="dbf"><div class="dbfn">category</div><div class="dbft">ENUM</div><div class="dbfd">curriculum/class/maintenance/eval/admin</div></div>
+            <div class="dbf"><div class="dbfn">priority</div><div class="dbft">ENUM</div><div class="dbfd">critical/high/medium/low</div></div>
+            <div class="dbf"><div class="dbfn">status</div><div class="dbft">ENUM</div><div class="dbfd">draft/active/in_progress/done/overdue</div></div>
+            <div class="dbf"><div class="dbfn">deadline</div><div class="dbft">TIMESTAMPTZ</div><div class="dbfd">Task due date/time</div></div>
+            <div class="dbf"><div class="dbfn">reminder_config</div><div class="dbft">JSONB</div><div class="dbfd">["30d","7d","3d","1d","overdue"]</div></div>
+            <div class="dbf"><div class="dbfn">notify_amt</div><div class="dbft">BOOLEAN</div><div class="dbfd">Triggers AMT Head update stream</div></div>
+            <div class="dbf"><div class="dbfn">ai_risk_score</div><div class="dbft">DECIMAL</div><div class="dbfd">0–100 overdue probability</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="dbt"><div class="dbth">📚 curriculum_entries</div>
+            <div class="dbf"><div class="dbfn">id<span class="dbpk">PK</span></div><div class="dbft">UUID</div><div class="dbfd">Entry identifier</div></div>
+            <div class="dbf"><div class="dbfn">department_id<span class="dbfk">FK</span></div><div class="dbft">UUID</div><div class="dbfd">Which department</div></div>
+            <div class="dbf"><div class="dbfn">subject</div><div class="dbft">VARCHAR</div><div class="dbfd">Module name</div></div>
+            <div class="dbf"><div class="dbfn">completion_pct</div><div class="dbft">DECIMAL</div><div class="dbfd">Auto-computed progress</div></div>
+            <div class="dbf"><div class="dbfn">status</div><div class="dbft">ENUM</div><div class="dbfd">draft/submitted/approved/rejected</div></div>
+            <div class="dbf"><div class="dbfn">submitted_by<span class="dbfk">FK</span></div><div class="dbft">UUID</div><div class="dbfd">Chief Instructor</div></div>
+            <div class="dbf"><div class="dbfn">reviewed_by<span class="dbfk">FK</span></div><div class="dbft">UUID</div><div class="dbfd">AMT Head</div></div>
+            <div class="dbf"><div class="dbfn">version</div><div class="dbft">INTEGER</div><div class="dbfd">Auto-incremented on update</div></div>
+            <div class="dbf"><div class="dbfn">diff_snapshot</div><div class="dbft">JSONB</div><div class="dbfd">Change diff for version history</div></div>
+          </div>
+          <div class="dbt"><div class="dbth">👥 students</div>
+            <div class="dbf"><div class="dbfn">id<span class="dbpk">PK</span></div><div class="dbft">UUID</div><div class="dbfd">Student identifier</div></div>
+            <div class="dbf"><div class="dbfn">department_id<span class="dbfk">FK</span></div><div class="dbfd">Enrolled department</div></div>
+            <div class="dbf"><div class="dbfn">class_id<span class="dbfk">FK</span></div><div class="dbft">UUID</div><div class="dbfd">Assigned class</div></div>
+            <div class="dbf"><div class="dbfn">gpa</div><div class="dbft">DECIMAL</div><div class="dbfd">Current GPA (0.00–4.00)</div></div>
+            <div class="dbf"><div class="dbfn">attendance_pct</div><div class="dbft">DECIMAL</div><div class="dbfd">Attendance rate %</div></div>
+            <div class="dbf"><div class="dbfn">at_risk</div><div class="dbft">BOOLEAN</div><div class="dbfd">AI-flagged risk status</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== AMT HEAD: DASHBOARD ====== -->
+    <div class="page" id="pg-amt-dash">
+      <div class="prh" style="display:none" id="prh-amt-dash"><div><h1>AMT Head Dashboard</h1><div class="ps">Ethiopian Aviation University · Chief Instructor Updates Stream</div></div><div><div class="prl"><span>EAU</span></div><div class="prfl"></div><div class="ps" id="ptm-amt-dash" style="margin-top:4pt;text-align:right"></div></div></div>
+      <div class="ph"><div class="ph-l"><div class="bc">EAU / AMT Head / Dashboard</div><h1>AMT Head Dashboard</h1><p>Live updates from all 4 Chief Instructors — Semester 2, 2024/25</p></div></div>
+      <div class="kg kg4">
+        <div class="kc cr"><div class="kl">Overdue (All Depts)</div><div class="kv tr">5</div><div class="kd"><span class="dn">▲ 2</span> this week</div><div class="kico">⚠️</div></div>
+        <div class="kc cg"><div class="kl">Pending Approvals</div><div class="kv tg">3</div><div class="kd">Curriculum updates</div><div class="kico">⏳</div></div>
+        <div class="kc cgr"><div class="kl">Completed This Week</div><div class="kv tgr">12</div><div class="kd"><span class="up">▲ 4</span> vs last week</div><div class="kico">✅</div></div>
+        <div class="kc cb"><div class="kl">New CI Updates</div><div class="kv tb">8</div><div class="kd">From chief instructors</div><div class="kico">📥</div></div>
+      </div>
+      <div class="g60">
+        <div>
+          <div class="mono mb1" style="font-size:.58rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase">📥 Live Updates from Chief Instructors</div>
+          <div id="amt-stream"></div>
+        </div>
+        <div class="gcol">
+          <div class="pnl"><div class="ph2"><h3>Curriculum Updates — Pending Review</h3><span class="ptag">3 PENDING</span></div><div class="pb" id="amt-curric"></div></div>
+          <div class="pnl"><div class="ph2"><h3>Department Curriculum Progress</h3></div><div class="pb">
+            <div class="prog"><div class="pl"><span><span class="tr">🔥</span> Powerplant</span><span>87%</span></div><div class="pt"><div class="pf pfr" style="width:87%"></div></div></div>
+            <div class="prog"><div class="pl"><span><span class="tgr">🛩</span> Airframe</span><span>82%</span></div><div class="pt"><div class="pf pfgr" style="width:82%"></div></div></div>
+            <div class="prog"><div class="pl"><span><span style="color:#c4b5fd">📡</span> Avionics</span><span>74%</span></div><div class="pt"><div class="pf pfp" style="width:74%"></div></div></div>
+            <div class="prog"><div class="pl"><span><span style="color:#2dd4bf">🔩</span> Structure</span><span>66%</span></div><div class="pt"><div class="pf pft" style="width:66%"></div></div></div>
+          </div></div>
+        </div>
+      </div>
+      <div class="prft" style="display:none"><span>EAU Manage X · AMT Head Report · Confidential</span><span id="pft-amt-dash"></span></div>
+    </div>
+
+    <!-- ====== AMT HEAD: REPORTS ====== -->
+    <div class="page" id="pg-amt-rep">
+      <div class="ph"><div class="ph-l"><div class="bc">EAU / AMT Head / Reports</div><h1>Department Reports</h1><p>Auto-generated task, curriculum and performance reports from all Chief Instructors</p></div></div>
+      <div class="g2">
+        <div>
+          <div class="mono mb1" style="font-size:.58rem;color:var(--muted);letter-spacing:.16em;text-transform:uppercase">Auto-Generated Reports</div>
+          <div class="rc" onclick="showToast('Generating report...')"><div class="rc-ic" style="background:rgba(192,57,43,.15)">📄</div><div><div class="rc-t">Weekly Department Summary</div><div class="rc-d">Tasks created, completed, overdue per dept — every Monday</div></div><div class="rc-a">↓ PDF</div></div>
+          <div class="rc" onclick="showToast('Generating...')"><div class="rc-ic" style="background:rgba(192,57,43,.15)">📄</div><div><div class="rc-t">Curriculum Submissions Report</div><div class="rc-d">All CI curriculum updates this semester — status &amp; versions</div></div><div class="rc-a">↓ PDF</div></div>
+          <div class="rc" onclick="showToast('Exporting...')"><div class="rc-ic" style="background:rgba(26,122,70,.15)">📊</div><div><div class="rc-t">Task Completion by Department</div><div class="rc-d">Completion rates, on-time delivery, efficiency scores</div></div><div class="rc-a">↓ XLSX</div></div>
+          <div class="rc" onclick="showToast('Exporting...')"><div class="rc-ic" style="background:rgba(26,122,70,.15)">📊</div><div><div class="rc-t">Pending Tasks — All Departments</div><div class="rc-d">All active and due-soon tasks across 4 depts</div></div><div class="rc-a">↓ XLSX</div></div>
+        </div>
+        <div class="pnl"><div class="ph2"><h3>📊 Task Statistics by Department</h3></div><div style="overflow-x:auto"><table class="tbl">
+          <thead><tr><th>Department</th><th>Chief Instructor</th><th>Created</th><th>Completed</th><th>Pending</th><th>Overdue</th><th>On-Time %</th></tr></thead>
+          <tbody>
+            <tr><td><span class="tr">🔥 Powerplant</span></td><td style="font-size:.78rem">Bereket T.</td><td>28</td><td>18</td><td>8</td><td class="tr">2</td><td class="tgr">87%</td></tr>
+            <tr><td><span style="color:#c4b5fd">📡 Avionics</span></td><td style="font-size:.78rem">Hiwot G.</td><td>24</td><td>14</td><td>9</td><td class="tr">1</td><td class="tgr">91%</td></tr>
+            <tr><td><span class="tgr">🛩 Airframe</span></td><td style="font-size:.78rem">Biruk T.</td><td>31</td><td>22</td><td>8</td><td style="color:var(--gold2)">1</td><td class="tgr">94%</td></tr>
+            <tr><td><span style="color:#2dd4bf">🔩 Structure</span></td><td style="font-size:.78rem">Yonas A.</td><td>22</td><td>11</td><td>9</td><td class="tr">2</td><td style="color:var(--gold2)">79%</td></tr>
+            <tr style="background:rgba(255,255,255,.025)"><td><strong>TOTAL</strong></td><td></td><td><strong>105</strong></td><td><strong>65</strong></td><td><strong>34</strong></td><td class="tr"><strong>6</strong></td><td class="tgr"><strong>88%</strong></td></tr>
+          </tbody>
+        </table></div></div>
+      </div>
+    </div>
+
+    <!-- ====== CI: DASHBOARD (shared, filled by JS) ====== -->
+    <div class="page" id="pg-ci-dash">
+      <div class="prh" style="display:none" id="prh-ci-dash"><div><h1 id="ci-prh-t">Dept Dashboard</h1><div class="ps" id="ci-prh-s">Chief Instructor Report</div></div><div><div class="prl"><span>EAU</span></div><div class="prfl"></div><div class="ps" id="ptm-ci-dash" style="margin-top:4pt;text-align:right"></div></div></div>
+      <div class="ph">
+        <div class="ph-l"><div class="bc" id="ci-bc">EAU / Dept / Dashboard</div><h1 id="ci-h1">Department</h1><p id="ci-sub">Chief Instructor</p></div>
+        <div class="ph-r"><button class="btn bpr bsm" onclick="openTaskModal()">＋ New Task</button><button class="btn bgh bsm" onclick="openCurrModal()">📝 Submit Curriculum Update</button></div>
+      </div>
+      <div class="kg kg4" id="ci-kpis"></div>
+      <!-- TABS -->
+      <div class="pnl">
+        <div class="tabs">
+          <div class="tab on" onclick="ciTab(this,'ov')">📊 Overview</div>
+          <div class="tab" onclick="ciTab(this,'st')">👥 Students</div>
+          <div class="tab" onclick="ciTab(this,'tc')">👤 Teachers</div>
+          <div class="tab" onclick="ciTab(this,'cl')">🏫 Classes</div>
+          <div class="tab" onclick="ciTab(this,'tk')">✅ Tasks</div>
+          <div class="tab" onclick="ciTab(this,'cu')">📚 Curriculum</div>
+          <div class="tab" onclick="ciTab(this,'rm')">🔔 Reminders</div>
+        </div>
+        <!-- Overview -->
+        <div class="tbc on" id="tbc-ov">
+          <div class="g60">
+            <div>
+              <div style="font-size:.78rem;font-weight:600;margin-bottom:.85rem">Department Performance</div>
+              <div id="ci-ov-prog"></div>
+              <div class="sep"></div>
+              <div id="ci-ov-tasks"></div>
+            </div>
+            <div id="ci-ov-rem"></div>
+          </div>
+        </div>
+        <!-- Students -->
+        <div class="tbc" id="tbc-st">
+          <div class="fsb mb1"><div style="font-size:.83rem;font-weight:600">Students in My Department</div><button class="btn bpr bsm" onclick="openStudModal()">＋ Add Student</button></div>
+          <div class="g3" id="ci-st-grid"></div>
+        </div>
+        <!-- Teachers -->
+        <div class="tbc" id="tbc-tc">
+          <div class="fsb mb1"><div style="font-size:.83rem;font-weight:600">Instructors &amp; Teachers</div><button class="btn bgh bsm">＋ Add Teacher</button></div>
+          <div class="g2" id="ci-tc-grid"></div>
+        </div>
+        <!-- Classes -->
+        <div class="tbc" id="tbc-cl">
+          <div class="fsb mb1"><div style="font-size:.83rem;font-weight:600">Class Schedule</div><button class="btn bgh bsm">＋ Add Class</button></div>
+          <table class="tbl" id="ci-cl-tbl"></table>
+        </div>
+        <!-- Tasks -->
+        <div class="tbc" id="tbc-tk">
+          <div class="fsb mb1">
+            <div style="font-size:.83rem;font-weight:600">Department Tasks</div>
+            <div class="flex g5">
+              <button class="btn bpr bsm" id="tf-all" onclick="filterTasks('all',this)">All</button>
+              <button class="btn bgh bsm" onclick="filterTasks('ov',this)">🔴 Overdue</button>
+              <button class="btn bgh bsm" onclick="filterTasks('ds',this)">🟡 Due Soon</button>
+              <button class="btn bgh bsm" onclick="filterTasks('ot',this)">🟢 On Track</button>
+              <button class="btn bgh bsm" onclick="filterTasks('dn',this)">🔵 Done</button>
+              <button class="btn bpr bsm" onclick="openTaskModal()">＋ New Task</button>
+            </div>
+          </div>
+          <div id="ci-tk-list"></div>
+        </div>
+        <!-- Curriculum -->
+        <div class="tbc" id="tbc-cu">
+          <div class="fsb mb1"><div style="font-size:.83rem;font-weight:600">Curriculum Modules</div><button class="btn bgo bsm" onclick="openCurrModal()">📤 Submit Update to AMT Head</button></div>
+          <div id="ci-cu-list"></div>
+        </div>
+        <!-- Reminders -->
+        <div class="tbc" id="tbc-rm">
+          <div style="font-size:.83rem;font-weight:600;margin-bottom:.85rem">Active Reminder Schedule</div>
+          <div class="rl" id="ci-rm-list"></div>
+        </div>
+      </div>
+      <div class="prft" style="display:none"><span id="ci-prft-l">EAU Manage X · CI Report</span><span id="pft-ci-dash"></span></div>
+    </div>
+
+  </div><!-- /mw -->
+
+  <!-- Notif Drawer -->
+  <div class="ndwr" id="ndwr">
+    <div class="ndwr-h">
+      <h3>Notifications <span class="ncnt" id="ncnt">0</span></h3>
+      <button onclick="toggleNotif()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:.95rem">✕</button>
+    </div>
+    <div id="nlist"></div>
+  </div>
+</div><!-- /sa -->
+
+<!-- TASK MODAL -->
+<div class="ovl" id="m-task">
+  <div class="mdl">
+    <div class="mh"><h2 id="m-task-h">📋 New Task</h2><button class="mcl" onclick="closeM('m-task')">✕</button></div>
+    <div class="mb">
+      <div class="mfg"><label>Task Title *</label><input type="text" id="mt-title" placeholder="e.g. Turbine Theory Exam Preparation"></div>
+      <div class="mfg"><label>Description</label><textarea id="mt-desc" placeholder="Describe the task, materials needed, expected outcome..."></textarea></div>
+      <div class="mg2">
+        <div class="mfg"><label>Task Category</label><select id="mt-cat"><option value="cu">📚 Curriculum Review</option><option value="cl">🏫 Class Preparation</option><option value="mn">🔧 Maintenance Training Update</option><option value="ev">📝 Student Evaluation</option><option value="ad">📋 Administrative</option></select></div>
+        <div class="mfg"><label>Priority Level</label><select id="mt-prio"><option value="critical">🔴 Critical</option><option value="high">🟡 High</option><option value="medium" selected>🔵 Medium</option><option value="low">⚪ Low</option></select></div>
+      </div>
+      <div class="mg2">
+        <div class="mfg"><label>Assign To (Teacher / Instructor)</label><select id="mt-asgn"><option value="">— Select —</option></select></div>
+        <div class="mfg"><label>Deadline *</label><input type="date" id="mt-dl"></div>
+      </div>
+      <div class="mfg"><label>Automated Reminder Triggers</label>
+        <div class="rcs">
+          <div class="rck on" onclick="toggleR(this)"><div class="rb">✓</div>30 days</div>
+          <div class="rck on" onclick="toggleR(this)"><div class="rb">✓</div>15 days</div>
+          <div class="rck on" onclick="toggleR(this)"><div class="rb">✓</div>7 days</div>
+          <div class="rck on" onclick="toggleR(this)"><div class="rb">✓</div>3 days</div>
+          <div class="rck on" onclick="toggleR(this)"><div class="rb">✓</div>1 day</div>
+          <div class="rck on" onclick="toggleR(this)"><div class="rb">✓</div>Same day</div>
+          <div class="rck on" onclick="toggleR(this)"><div class="rb">✓</div>Overdue 24h</div>
+        </div>
+      </div>
+      <div class="mfg"><label>Notify AMT Head on Creation</label><select id="mt-notif"><option value="yes">✅ Yes — Send immediate update to AMT Head</option><option value="no">No — Add silently</option></select></div>
+      <div style="background:rgba(232,160,32,.05);border:1px solid rgba(232,160,32,.11);border-radius:8px;padding:.78rem .95rem;font-size:.75rem;color:var(--muted);line-height:1.6">💡 Task will be visible to <strong style="color:var(--white)">AMT Head</strong> and <strong style="color:var(--white)">University Manager</strong>. Automated reminders fire at configured intervals via push notification, email, and in-app alert.</div>
+    </div>
+    <div class="mft"><button class="btn bgh" onclick="closeM('m-task')">Cancel</button><button class="btn bpr" onclick="submitTask()">➕ Create Task &amp; Notify AMT Head</button></div>
+  </div>
+</div>
+
+<!-- CURRICULUM MODAL -->
+<div class="ovl" id="m-curr">
+  <div class="mdl mdl-lg">
+    <div class="mh"><h2>📝 Submit Curriculum Update to AMT Head</h2><button class="mcl" onclick="closeM('m-curr')">✕</button></div>
+    <div class="mb">
+      <div class="mg2">
+        <div class="mfg"><label>Module / Subject *</label><select id="mc-mod"><option value="">— Select module —</option></select></div>
+        <div class="mfg"><label>Academic Semester</label><input type="text" value="2024/25 — Semester 2"></div>
+      </div>
+      <div class="mfg"><label>Update Type</label><select id="mc-type"><option>Content Revision</option><option>New Module Addition</option><option>Exam Date Change</option><option>Lab Hours Adjustment</option><option>Learning Outcomes Update</option><option>Ministry Compliance Update</option></select></div>
+      <div class="mfg"><label>Summary of Changes *</label><textarea id="mc-sum" placeholder="Describe what is being updated and why. Be specific for AMT Head review."></textarea></div>
+      <div class="mg2">
+        <div class="mfg"><label>Current Completion %</label><input type="number" id="mc-pct" min="0" max="100" placeholder="e.g. 75"></div>
+        <div class="mfg"><label>Target Completion Date</label><input type="date" id="mc-date"></div>
+      </div>
+      <div class="mfg"><label>Notes for AMT Head</label><textarea id="mc-notes" placeholder="Any context, challenges, requests, or justification for the AMT Head..."></textarea></div>
+      <div style="background:rgba(21,101,192,.06);border:1px solid rgba(21,101,192,.13);border-radius:8px;padding:.78rem .95rem;font-size:.75rem;color:var(--muted);line-height:1.6">📤 This update will be sent to the <strong style="color:var(--white)">AMT Head</strong> for review and approval. You'll be notified when approved or returned with feedback. Version history is maintained automatically for ICAO/ECAA audit evidence.</div>
+    </div>
+    <div class="mft"><button class="btn bgh" onclick="closeM('m-curr')">Cancel</button><button class="btn bgo" onclick="submitCurr()">📤 Submit to AMT Head for Review</button></div>
+  </div>
+</div>
+
+<!-- STUDENT MODAL -->
+<div class="ovl" id="m-stud">
+  <div class="mdl">
+    <div class="mh"><h2>👥 Add Student</h2><button class="mcl" onclick="closeM('m-stud')">✕</button></div>
+    <div class="mb">
+      <div class="mg2">
+        <div class="mfg"><label>Full Name *</label><input type="text" id="ms-nm" placeholder="Student full name"></div>
+        <div class="mfg"><label>Student ID *</label><input type="text" id="ms-id" placeholder="EAU-2024-XXXX"></div>
+      </div>
+      <div class="mg2">
+        <div class="mfg"><label>Assign to Class</label><select id="ms-cl"><option value="">— Select class —</option></select></div>
+        <div class="mfg"><label>Year / Batch</label><select id="ms-yr"><option>Year 1</option><option>Year 2</option><option>Year 3</option></select></div>
+      </div>
+      <div class="mg2">
+        <div class="mfg"><label>Email</label><input type="email" id="ms-em" placeholder="student@eau.edu.et"></div>
+        <div class="mfg"><label>Phone</label><input type="tel" id="ms-ph" placeholder="+251 9XX XXX XXX"></div>
+      </div>
+    </div>
+    <div class="mft"><button class="btn bgh" onclick="closeM('m-stud')">Cancel</button><button class="btn bpr" onclick="submitStud()">➕ Add Student</button></div>
+  </div>
+</div>
+
+<!-- PRINT MODAL -->
+<div class="ovl" id="m-print">
+  <div class="mdl">
+    <div class="mh"><h2>🖨 Print Report</h2><button class="mcl" onclick="closeM('m-print')">✕</button></div>
+    <div class="mb">
+      <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.75rem">Select Document</div>
+      <div id="pm-opts" style="display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin-bottom:1.3rem"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.85rem;margin-bottom:1.2rem">
+        <div><label style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:.35rem">Paper Size</label><select id="pm-paper" style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--bdr);border-radius:7px;padding:.48rem .85rem;color:var(--white);font-size:.82rem;outline:none"><option>A4 Landscape</option><option>A4 Portrait</option><option>Letter Landscape</option></select></div>
+        <div><label style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:.35rem">Colour Mode</label><select id="pm-color" style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--bdr);border-radius:7px;padding:.48rem .85rem;color:var(--white);font-size:.82rem;outline:none"><option value="c">Full Colour</option><option value="bw">Black &amp; White</option></select></div>
+        <div><label style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:.35rem">Timestamp</label><select id="pm-ts" style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--bdr);border-radius:7px;padding:.48rem .85rem;color:var(--white);font-size:.82rem;outline:none"><option value="y">Include</option><option value="n">Exclude</option></select></div>
+        <div><label style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:.35rem">EAU Logo Header</label><select id="pm-logo" style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--bdr);border-radius:7px;padding:.48rem .85rem;color:var(--white);font-size:.82rem;outline:none"><option value="y">Include</option><option value="n">Exclude</option></select></div>
+      </div>
+      <div style="background:rgba(232,160,32,.05);border:1px solid rgba(232,160,32,.11);border-radius:8px;padding:.75rem .95rem;font-size:.75rem;color:var(--muted)">💡 Enable <strong style="color:var(--white)">Background Graphics</strong> in your browser print dialog for best colour output on paper.</div>
+    </div>
+    <div class="mft"><button class="btn bgh" onclick="closeM('m-print')">Cancel</button><button class="btn bpr" onclick="executePrint()">🖨 Send to Printer</button></div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════
+//  DATA
+// ════════════════════════════════════════
+const RD = {
+  admin:{lbl:'University Manager',ico:'🏛',rp:'rp-admin',av:'MA',nm:'Mekdes Alemu',col:'linear-gradient(135deg,#e8a020,#1a3875)'},
+  amt:  {lbl:'AMT Head',          ico:'✈',rp:'rp-amt',  av:'KA',nm:'Kebede Ayalew',col:'linear-gradient(135deg,#1565c0,#040d1a)'},
+  pp:   {lbl:'CI · Powerplant',   ico:'🔥',rp:'rp-pp',  av:'BT',nm:'Bereket Tadesse',col:'linear-gradient(135deg,#c0392b,#040d1a)'},
+  av:   {lbl:'CI · Avionics',     ico:'📡',rp:'rp-av',  av:'HG',nm:'Hiwot Girma',   col:'linear-gradient(135deg,#5c35c2,#040d1a)'},
+  af:   {lbl:'CI · Airframe',     ico:'🛩',rp:'rp-af',  av:'BT2',nm:'Biruk Tesfaye',col:'linear-gradient(135deg,#1a7a46,#040d1a)'},
+  st:   {lbl:'CI · Structure',    ico:'🔩',rp:'rp-st',  av:'YA',nm:'Yonas Alemu',   col:'linear-gradient(135deg,#006064,#040d1a)'}
+};
+const EMAILS = {admin:'admin@eau.edu.et',amt:'k.ayalew@eau.edu.et',pp:'b.tadesse@eau.edu.et',av:'h.girma@eau.edu.et',af:'bi.tesfaye@eau.edu.et',st:'y.alemu@eau.edu.et'};
+
+const DD = {
+  pp:{nm:'Powerplant',ico:'🔥',sc:'91.4',curr:87,ov:2,pf:'pfr',hex:'#fc8181',
+    teachers:[{nm:'Tesfaye Worku',subj:'Engine Systems',tasks:6,score:88,av:'TW',col:'#c0392b'},{nm:'Liya Mekonnen',subj:'Turbine Theory',tasks:4,score:92,av:'LM',col:'#1a7a46'},{nm:'Dawit Selassie',subj:'Fuel & Combustion',tasks:5,score:85,av:'DS',col:'#1565c0'},{nm:'Mihret Haile',subj:'Propeller Systems',tasks:3,score:90,av:'MH',col:'#5c35c2'}],
+    students:[{nm:'Abel Tesfaye',id:'EAU-24-PP-001',cl:'PP-A',yr:'Yr 2',gpa:3.6,att:94,risk:false},{nm:'Bethlehem Assefa',id:'EAU-24-PP-002',cl:'PP-A',yr:'Yr 2',gpa:2.9,att:82,risk:true},{nm:'Caleb Girma',id:'EAU-24-PP-003',cl:'PP-B',yr:'Yr 1',gpa:3.8,att:97,risk:false},{nm:'Dagmawit Tadesse',id:'EAU-24-PP-004',cl:'PP-B',yr:'Yr 1',gpa:3.1,att:88,risk:false},{nm:'Eden Bekele',id:'EAU-24-PP-005',cl:'PP-A',yr:'Yr 3',gpa:2.6,att:75,risk:true},{nm:'Fikadu Alemu',id:'EAU-24-PP-006',cl:'PP-C',yr:'Yr 2',gpa:3.9,att:99,risk:false}],
+    classes:[{nm:'PP-A',inst:'Tesfaye Worku',cnt:12,sched:'Mon/Wed 08:00–10:00',rm:'Lab 1'},{nm:'PP-B',inst:'Liya Mekonnen',cnt:11,sched:'Tue/Thu 10:00–12:00',rm:'Lab 2'},{nm:'PP-C',inst:'Dawit Selassie',cnt:9,sched:'Mon/Fri 14:00–16:00',rm:'Lab 3'}],
+    tasks:[{t:'Engine Run-up Procedure Assessment',who:'Tesfaye Worku',cat:'mn',prio:'critical',st:'ov',dl:'Mar 01',desc:'Assess student performance on engine run-up procedures per ECAR standards.'},{t:'Turbine Theory Exam Preparation',who:'Liya Mekonnen',cat:'ev',prio:'high',st:'ds',dl:'Mar 12',desc:'Prepare exam questions for mid-semester turbine theory assessment.'},{t:'Fuel System Safety Inspection Lab',who:'Dawit Selassie',cat:'cl',prio:'medium',st:'ot',dl:'Mar 28',desc:'Conduct hands-on fuel system safety inspection training session.'},{t:'Propeller Balancing Practical',who:'Mihret Haile',cat:'cl',prio:'low',st:'ot',dl:'Apr 05',desc:'Lab session: static and dynamic propeller balancing techniques.'},{t:'Curriculum Review — Engine Systems II',who:'Tesfaye Worku',cat:'cu',prio:'high',st:'dn',dl:'Feb 20',desc:'Annual curriculum review for Engine Systems II module.'}],
+    mods:['Engine Systems I','Engine Systems II','Fuel & Combustion','Turbine Theory','Propeller Systems'],
+    modPct:[92,87,80,72,68],
+    curric:[{m:'Engine Systems I',pct:92,st:'appd',note:'Approved by AMT Head — v3.1'},{m:'Engine Systems II',pct:87,st:'appd',note:'Approved — ECAR compliant'},{m:'Fuel & Combustion',pct:80,st:'pend',note:'Submitted for review — awaiting AMT approval'},{m:'Turbine Theory',pct:72,st:'appd',note:'Update approved v2.4'},{m:'Propeller Systems',pct:68,st:'retd',note:'Returned: needs ICAO alignment — resubmit'}]
+  },
+  av:{nm:'Avionics',ico:'📡',sc:'88.7',curr:74,ov:1,pf:'pfp',hex:'#c4b5fd',
+    teachers:[{nm:'Mihret Haile',subj:'Digital Electronics',tasks:5,score:91,av:'MH',col:'#5c35c2'},{nm:'Dawit Selassie',subj:'Navigation Systems',tasks:4,score:87,av:'DS',col:'#1565c0'},{nm:'Sara Tesfaye',subj:'Communication Systems',tasks:6,score:94,av:'ST',col:'#1a7a46'},{nm:'Fikru Kebede',subj:'Radar & Transponders',tasks:3,score:85,av:'FK',col:'#c0392b'},{nm:'Abebe Woldemariam',subj:'Autopilot Systems',tasks:2,score:89,av:'AW',col:'#006064'}],
+    students:[{nm:'Girma Haile',id:'EAU-24-AV-001',cl:'AV-A',yr:'Yr 2',gpa:3.7,att:96,risk:false},{nm:'Helen Tekeste',id:'EAU-24-AV-002',cl:'AV-A',yr:'Yr 1',gpa:2.8,att:79,risk:true},{nm:'Isaac Mekonen',id:'EAU-24-AV-003',cl:'AV-B',yr:'Yr 3',gpa:3.5,att:92,risk:false},{nm:'Jemil Seid',id:'EAU-24-AV-004',cl:'AV-B',yr:'Yr 2',gpa:3.9,att:98,risk:false}],
+    classes:[{nm:'AV-A',inst:'Sara Tesfaye',cnt:14,sched:'Mon/Wed 10:00–12:00',rm:'Avionics Lab'},{nm:'AV-B',inst:'Mihret Haile',cnt:14,sched:'Tue/Thu 08:00–10:00',rm:'Sim Room'}],
+    tasks:[{t:'Avionics Lab Equipment Calibration',who:'Mihret Haile',cat:'mn',prio:'high',st:'ds',dl:'Mar 10',desc:'Annual calibration of avionics lab test equipment.'},{t:'Navigation Systems Update Lab',who:'Dawit Selassie',cat:'cl',prio:'medium',st:'ot',dl:'Mar 28',desc:'Practical session on updated FMS navigation procedures.'},{t:'Radar Transponder Theory Test',who:'Sara Tesfaye',cat:'ev',prio:'critical',st:'ov',dl:'Feb 28',desc:'Mid-semester evaluation on SSR transponder theory.'},{t:'Digital Electronics Revision',who:'Fikru Kebede',cat:'cu',prio:'medium',st:'ot',dl:'Apr 02',desc:'Review digital circuit analysis module for ICAO alignment.'}],
+    mods:['Digital Electronics','Navigation Systems','Communication Systems','Radar & Transponders','Autopilot Systems'],
+    modPct:[88,79,73,65,62],
+    curric:[{m:'Digital Electronics',pct:88,st:'appd',note:'Approved — v2.1'},{m:'Navigation Systems',pct:79,st:'pend',note:'Under AMT Head review'},{m:'Communication Systems',pct:73,st:'appd',note:'Approved — ICAO compliant'},{m:'Radar & Transponders',pct:65,st:'pend',note:'Submitted 2 days ago'},{m:'Autopilot Systems',pct:62,st:'appd',note:'Approved — v1.3'}]
+  },
+  af:{nm:'Airframe',ico:'🛩',sc:'93.2',curr:82,ov:1,pf:'pfgr',hex:'#4ade80',
+    teachers:[{nm:'Abebe Woldemariam',subj:'Airframe Structures',tasks:7,score:95,av:'AW',col:'#1a7a46'},{nm:'Sara Tesfaye',subj:'Control Surfaces',tasks:5,score:92,av:'ST',col:'#1565c0'},{nm:'Fikru Kebede',subj:'Hydraulics',tasks:6,score:88,av:'FK',col:'#c0392b'},{nm:'Liya Mekonnen',subj:'Landing Gear',tasks:4,score:91,av:'LM',col:'#5c35c2'},{nm:'Bereket Hailu',subj:'Airframe Inspection',tasks:3,score:96,av:'BH',col:'#006064'}],
+    students:[{nm:'Kaleb Tesfaye',id:'EAU-24-AF-001',cl:'AF-A',yr:'Yr 2',gpa:3.9,att:99,risk:false},{nm:'Lensa Bekele',id:'EAU-24-AF-002',cl:'AF-A',yr:'Yr 1',gpa:3.4,att:91,risk:false},{nm:'Mesfin Alemu',id:'EAU-24-AF-003',cl:'AF-B',yr:'Yr 3',gpa:2.7,att:77,risk:true},{nm:'Nardos Haile',id:'EAU-24-AF-004',cl:'AF-B',yr:'Yr 2',gpa:3.6,att:95,risk:false},{nm:'Omar Jemal',id:'EAU-24-AF-005',cl:'AF-C',yr:'Yr 1',gpa:3.8,att:97,risk:false}],
+    classes:[{nm:'AF-A',inst:'Abebe Woldemariam',cnt:12,sched:'Mon/Wed 08:00–10:00',rm:'Hangar Lab'},{nm:'AF-B',inst:'Sara Tesfaye',cnt:12,sched:'Tue/Thu 10:00–12:00',rm:'Lab 4'},{nm:'AF-C',inst:'Fikru Kebede',cnt:11,sched:'Wed/Fri 14:00–16:00',rm:'Lab 5'}],
+    tasks:[{t:'Control Surface Inspection Drill',who:'Abebe Woldemariam',cat:'cl',prio:'high',st:'ot',dl:'Mar 22',desc:'Student drill on aileron, elevator and rudder inspection procedures.'},{t:'Wing Spar Inspection Report',who:'Sara Tesfaye',cat:'ev',prio:'low',st:'dn',dl:'Feb 20',desc:'Written report on wing spar structural inspection findings.'},{t:'Hydraulics Systems Practical',who:'Fikru Kebede',cat:'cl',prio:'medium',st:'ot',dl:'Mar 30',desc:'Hands-on session: hydraulic actuator maintenance procedures.'},{t:'Landing Gear Maintenance Log',who:'Liya Mekonnen',cat:'mn',prio:'high',st:'ds',dl:'Mar 08',desc:'Complete maintenance log for landing gear system checks.'}],
+    mods:['Airframe Structures I','Control Surfaces','Hydraulics & Pneumatics','Landing Gear Systems','Airframe Inspection'],
+    modPct:[96,89,82,75,70],
+    curric:[{m:'Airframe Structures I',pct:96,st:'appd',note:'Approved — v4.0'},{m:'Control Surfaces',pct:89,st:'appd',note:'ICAO compliant — approved'},{m:'Hydraulics & Pneumatics',pct:82,st:'appd',note:'v2.8 approved'},{m:'Landing Gear Systems',pct:75,st:'pend',note:'Submitted for AMT review'},{m:'Airframe Inspection',pct:70,st:'appd',note:'Approved v1.5'}]
+  },
+  st:{nm:'Structure',ico:'🔩',sc:'84.1',curr:66,ov:2,pf:'pft',hex:'#2dd4bf',
+    teachers:[{nm:'Fikru Kebede',subj:'Structural Analysis',tasks:6,score:82,av:'FK',col:'#006064'},{nm:'Yonas Hailu',subj:'Fuselage Construction',tasks:4,score:79,av:'YH',col:'#1565c0'},{nm:'Tigist Alemu',subj:'Wing Design',tasks:5,score:88,av:'TA',col:'#1a7a46'},{nm:'Kaleb Tesfaye',subj:'Stress & Load Testing',tasks:3,score:76,av:'KT',col:'#c0392b'}],
+    students:[{nm:'Roba Wakjira',id:'EAU-24-ST-001',cl:'ST-A',yr:'Yr 2',gpa:3.2,att:88,risk:false},{nm:'Sara Jimma',id:'EAU-24-ST-002',cl:'ST-A',yr:'Yr 1',gpa:2.5,att:71,risk:true},{nm:'Tomas Bekele',id:'EAU-24-ST-003',cl:'ST-B',yr:'Yr 3',gpa:3.7,att:95,risk:false},{nm:'Ubah Gebre',id:'EAU-24-ST-004',cl:'ST-B',yr:'Yr 2',gpa:2.3,att:68,risk:true}],
+    classes:[{nm:'ST-A',inst:'Fikru Kebede',cnt:14,sched:'Mon/Wed 10:00–12:00',rm:'Struct. Lab'},{nm:'ST-B',inst:'Yonas Hailu',cnt:13,sched:'Tue/Thu 14:00–16:00',rm:'Lab 6'}],
+    tasks:[{t:'Fuselage Stress Test Documentation',who:'Fikru Kebede',cat:'ev',prio:'critical',st:'ov',dl:'Mar 01',desc:'Complete stress test documentation per ECAR Part 147 requirements.'},{t:'Composite Materials Lab Report',who:'Yonas Hailu',cat:'cl',prio:'high',st:'ds',dl:'Mar 14',desc:'Lab report on carbon fiber composite material properties.'},{t:'Wing Design Analysis',who:'Tigist Alemu',cat:'cu',prio:'medium',st:'ot',dl:'Mar 25',desc:'Update wing design analysis module with latest aerodynamic data.'},{t:'Structural Load Testing',who:'Kaleb Tesfaye',cat:'mn',prio:'critical',st:'ov',dl:'Feb 25',desc:'Mandatory structural load testing per airworthiness directives.'}],
+    mods:['Structural Analysis','Fuselage Construction','Wing Design','Stress & Load Testing','Composite Materials'],
+    modPct:[78,70,65,55,50],
+    curric:[{m:'Structural Analysis',pct:78,st:'appd',note:'Approved — v2.0'},{m:'Fuselage Construction',pct:70,st:'pend',note:'Awaiting AMT Head review'},{m:'Wing Design',pct:65,st:'retd',note:'Returned: update load factor calculations'},{m:'Stress & Load Testing',pct:55,st:'appd',note:'Approved — needs 15% more completion'},{m:'Composite Materials',pct:50,st:'pend',note:'First submission — under review'}]
+  }
+};
+
+const NOTIFS = {
+  admin:[{ico:'🔴',t:'Fuselage Stress Test — OVERDUE (2 days)',s:'Structure · Fikru K. · Action required',dp:'Structure',dc:'rgba(0,131,143,.15)',dt:'#2dd4bf',u:true},{ico:'🔴',t:'Engine Run-up Procedure — OVERDUE',s:'Powerplant · Tesfaye W. · 3 days past deadline',dp:'Powerplant',dc:'rgba(192,57,43,.15)',dt:'#fc8181',u:true},{ico:'📋',t:'New task: Navigation Systems Lab',s:'Avionics · Hiwot G. added task — AMT notified',dp:'Avionics',dc:'rgba(92,53,194,.15)',dt:'#c4b5fd',u:true},{ico:'📝',t:'Curriculum update pending: Fuel & Combustion',s:'Powerplant · Bereket T. submitted for AMT review',dp:'Powerplant',dc:'rgba(192,57,43,.15)',dt:'#fc8181',u:false},{ico:'✅',t:'Wing Spar Inspection — Completed',s:'Airframe · Sara T. · AMT approved',dp:'Airframe',dc:'rgba(26,122,70,.15)',dt:'#4ade80',u:false}],
+  amt:[{ico:'🔴',t:'Structure: Fuselage Test OVERDUE 2 days',s:'Yonas A. · Immediate action required',dp:'Structure',dc:'rgba(0,131,143,.15)',dt:'#2dd4bf',u:true},{ico:'📝',t:'Curriculum Update: Fuel & Combustion (PP)',s:'Bereket T. submitted — awaiting your approval',dp:'Powerplant',dc:'rgba(192,57,43,.15)',dt:'#fc8181',u:true},{ico:'📝',t:'Curriculum Update: Navigation Systems (AV)',s:'Hiwot G. submitted — awaiting review',dp:'Avionics',dc:'rgba(92,53,194,.15)',dt:'#c4b5fd',u:true},{ico:'📋',t:'New task: Nav Systems Lab created',s:'Avionics · Hiwot G. → Dawit S. · Due Mar 28',dp:'Avionics',dc:'rgba(92,53,194,.15)',dt:'#c4b5fd',u:false},{ico:'✅',t:'Wing Spar completed — awaiting sign-off',s:'Airframe · Biruk T. · Sara T.',dp:'Airframe',dc:'rgba(26,122,70,.15)',dt:'#4ade80',u:false}],
+  pp:[{ico:'🔴',t:'OVERDUE: Engine Run-up Procedure',s:'3 days past deadline · AMT Head notified',dp:'Powerplant',dc:'rgba(192,57,43,.15)',dt:'#fc8181',u:true},{ico:'⚠️',t:'Turbine Theory Exam due in 7 days',s:'Liya M. · Mar 12 · Submit progress update',dp:'Powerplant',dc:'rgba(192,57,43,.15)',dt:'#fc8181',u:true},{ico:'📝',t:'Curriculum returned: Propeller Systems',s:'AMT Head: needs ICAO alignment — resubmit',dp:'Powerplant',dc:'rgba(192,57,43,.15)',dt:'#fc8181',u:true}],
+  av:[{ico:'🔴',t:'OVERDUE: Radar Transponder Theory Test',s:'Was due Feb 28 · AMT notified',dp:'Avionics',dc:'rgba(92,53,194,.15)',dt:'#c4b5fd',u:true},{ico:'⚠️',t:'Lab Calibration due in 5 days',s:'Mihret H. · Mar 10 · Approval pending',dp:'Avionics',dc:'rgba(92,53,194,.15)',dt:'#c4b5fd',u:true}],
+  af:[{ico:'⚠️',t:'Landing Gear Maintenance Log — 3 days',s:'Liya M. · Mar 08 · 1-day reminder set',dp:'Airframe',dc:'rgba(26,122,70,.15)',dt:'#4ade80',u:true},{ico:'✅',t:'Wing Spar Report completed & approved',s:'Sara T. · AMT Head signed off',dp:'Airframe',dc:'rgba(26,122,70,.15)',dt:'#4ade80',u:false}],
+  st:[{ico:'🔴',t:'OVERDUE: Fuselage Stress Test (2 days)',s:'Fikru K. · Critical — report now',dp:'Structure',dc:'rgba(0,131,143,.15)',dt:'#2dd4bf',u:true},{ico:'🔴',t:'OVERDUE: Structural Load Testing (7 days)',s:'Kaleb T. · Emergency escalation to AMT',dp:'Structure',dc:'rgba(0,131,143,.15)',dt:'#2dd4bf',u:true},{ico:'⚠️',t:'Curriculum: Wing Design — returned by AMT',s:'Update load factor calculations & resubmit',dp:'Structure',dc:'rgba(0,131,143,.15)',dt:'#2dd4bf',u:true}]
+};
+
+// ════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════
+let cRole='admin', cPage='admin-dash', printPg='admin-dash', notifOpen=false;
+
+// ════════════════════════════════════════
+//  LOGIN / LOGOUT
+// ════════════════════════════════════════
+function pickRole(el,role){
+  document.querySelectorAll('.ro').forEach(r=>r.classList.remove('sel'));
+  el.classList.add('sel'); cRole=role;
+  document.getElementById('lem').value = EMAILS[role]||'';
+}
+function doLogin(){
+  buildSidebar(); buildNotifs(); populateStatic();
+  if(['pp','av','af','st'].includes(cRole)) buildCI();
+  document.getElementById('sl').classList.remove('on');
+  document.getElementById('sa').classList.add('on');
+  showPg(cRole==='admin'?'admin-dash':cRole==='amt'?'amt-dash':'ci-dash');
+}
+function doLogout(){
+  document.getElementById('sa').classList.remove('on');
+  document.getElementById('sl').classList.add('on');
+  if(notifOpen){notifOpen=false;document.getElementById('ndwr').classList.remove('on');}
+}
+
+// ════════════════════════════════════════
+//  SIDEBAR
+// ════════════════════════════════════════
+function buildSidebar(){
+  const r=RD[cRole];
+  const rp=document.getElementById('rp-badge');
+  rp.className='rp '+r.rp; rp.innerHTML=r.ico+' &nbsp;'+r.lbl;
+  document.getElementById('sb-av').textContent=r.av;
+  document.getElementById('sb-av').style.background=r.col;
+  document.getElementById('sb-nm').textContent=r.nm;
+  document.getElementById('sb-rl').textContent=r.lbl;
+  const CI=['pp','av','af','st'].includes(cRole);
+  const d=CI?DD[cRole]:null;
+  let nav='';
+  if(cRole==='admin'){nav=`<div class="ns">Overview</div><div class="ni on" onclick="go('admin-dash',this)"><span class="ico">📊</span>Dashboard</div><div class="ni" onclick="go('admin-rep',this)"><span class="ico">📄</span>Reports</div><div class="ni" onclick="go('admin-sys',this)"><span class="ico">🏗</span>System Design</div>`;}
+  else if(cRole==='amt'){nav=`<div class="ns">AMT Overview</div><div class="ni on" onclick="go('amt-dash',this)"><span class="ico">📊</span>Dashboard <span class="bdg">8</span></div><div class="ni" onclick="go('amt-rep',this)"><span class="ico">📄</span>Reports</div>`;}
+  else{nav=`<div class="ns">My Department</div><div class="ni on" onclick="go('ci-dash',this)"><span class="ico">${d.ico}</span>${d.nm} Dept ${d.ov>0?`<span class="bdg">${d.ov}</span>`:''}</div><div class="ns">Quick Actions</div><div class="ni" onclick="openTaskModal()"><span class="ico">➕</span>New Task</div><div class="ni" onclick="openCurrModal()"><span class="ico">📝</span>Submit Curriculum Update</div>`;}
+  document.getElementById('sb-nav').innerHTML=nav;
+}
+
+// ════════════════════════════════════════
+//  PAGE NAV
+// ════════════════════════════════════════
+function go(pg,el){
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
+  if(el)el.classList.add('on');
+  showPg(pg);
+}
+function showPg(pg){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  const t=document.getElementById('pg-'+pg);
+  if(t)t.classList.add('on');
+  cPage=pg; printPg=pg;
+  const T={'admin-dash':'University Manager Dashboard','admin-rep':'Institutional Reports','admin-sys':'System Architecture & Design','amt-dash':'AMT Head — Live Updates','amt-rep':'Department Reports','ci-dash':(['pp','av','af','st'].includes(cRole)?DD[cRole].nm:'Dept')+' Department Dashboard'};
+  document.getElementById('tb-ttl').textContent=T[pg]||pg;
+}
+
+// ════════════════════════════════════════
+//  STATIC CONTENT
+// ════════════════════════════════════════
+function populateStatic(){
+  // Admin task table
+  const tasks=[
+    {t:'Engine Run-up Procedure Assessment',dp:'PP',ci:'Bereket T.',who:'Tesfaye W.',cat:'mn',prio:'critical',st:'ov',dl:'Mar 01'},
+    {t:'Avionics Lab Equipment Calibration',dp:'AV',ci:'Hiwot G.',who:'Mihret H.',cat:'mn',prio:'high',st:'ds',dl:'Mar 10'},
+    {t:'Control Surface Inspection Drill',dp:'AF',ci:'Biruk T.',who:'Abebe W.',cat:'cl',prio:'high',st:'ot',dl:'Mar 22'},
+    {t:'Fuselage Stress Test Documentation',dp:'ST',ci:'Yonas A.',who:'Fikru K.',cat:'ev',prio:'critical',st:'ov',dl:'Mar 01'},
+    {t:'Turbine Theory Exam Prep',dp:'PP',ci:'Bereket T.',who:'Liya M.',cat:'ev',prio:'high',st:'ds',dl:'Mar 12'},
+    {t:'Navigation Systems Update Lab',dp:'AV',ci:'Hiwot G.',who:'Dawit S.',cat:'cl',prio:'medium',st:'ot',dl:'Mar 28'},
+    {t:'Wing Spar Inspection Report',dp:'AF',ci:'Biruk T.',who:'Sara T.',cat:'ev',prio:'low',st:'dn',dl:'Feb 20'},
+    {t:'Composite Materials Lab Report',dp:'ST',ci:'Yonas A.',who:'Yonas H.',cat:'cl',prio:'high',st:'ds',dl:'Mar 14'},
+  ];
+  const dHex={PP:'#fc8181',AV:'#c4b5fd',AF:'#4ade80',ST:'#2dd4bf'};
+  const stB={ov:'br',ds:'by',ot:'bg',dn:'bb'};const stL={ov:'Overdue',ds:'Due Soon',ot:'On Track',dn:'Done'};
+  const prB={critical:'pcrit',high:'ph_p',medium:'pm',low:'pl2'};
+  const catB={cu:'tc-cu',cl:'tc-cl',mn:'tc-mn',ev:'tc-ev',ad:'tc-ad'};
+  const catL={cu:'Curriculum',cl:'Class Prep',mn:'Maintenance',ev:'Student Eval',ad:'Admin'};
+  const rows=tasks.map(t=>`<tr><td><div class="tm">${t.t}</div><div class="ts">${t.ci} → ${t.who}</div></td><td><span style="color:${dHex[t.dp]};font-family:'DM Mono',monospace;font-size:.68rem">${t.dp}</span></td><td><span class="tcat ${catB[t.cat]}">${catL[t.cat]}</span></td><td><span class="prio ${prB[t.prio]}">${t.prio}</span></td><td><span class="b ${stB[t.st]}">${stL[t.st]}</span></td><td class="mono" style="font-size:.68rem">${t.dl}</td></tr>`).join('');
+  const el=document.getElementById('admin-tbl');
+  if(el)el.innerHTML=`<thead><tr><th>Task</th><th>Dept</th><th>Category</th><th>Priority</th><th>Status</th><th>Deadline</th></tr></thead><tbody>${rows}</tbody>`;
+  // Admin feed
+  const feeds=[
+    {bg:'rgba(192,57,43,.15)',ico:'🔴',t:'Fuselage Stress Test OVERDUE',s:'Structure · 2 days · Yonas A. escalated to AMT Head',tm:'1h'},
+    {bg:'rgba(92,53,194,.15)',ico:'📋',t:'New task: Navigation Systems Lab',s:'Avionics · Hiwot G. → Dawit S. · Mar 28',tm:'3h'},
+    {bg:'rgba(26,122,70,.15)',ico:'✅',t:'Wing Spar Report completed',s:'Airframe · Sara T. · AMT sign-off approved',tm:'1d'},
+    {bg:'rgba(232,160,32,.12)',ico:'📝',t:'Curriculum update: Fuel & Combustion',s:'Powerplant · Bereket T. submitted for AMT review',tm:'2d'},
+  ];
+  const af=document.getElementById('admin-feed');
+  if(af)af.innerHTML=feeds.map(f=>`<div class="fi"><div class="fi-ic" style="background:${f.bg}">${f.ico}</div><div><div class="fi-t">${f.t}</div><div class="fi-s">${f.s}</div></div><div class="fi-tm">${f.tm}</div></div>`).join('');
+  // AMT stream
+  const stream=[
+    {cls:'urg',bg:'rgba(192,57,43,.1)',ico:'🔴',t:'Fuselage Stress Test — OVERDUE (2 days)',s:'Structure · Fikru K. · No update submitted',dp:'Structure',dc:'rgba(0,131,143,.15)',dt:'#2dd4bf',tm:'1h ago'},
+    {cls:'new',bg:'rgba(92,53,194,.1)',ico:'📋',t:'New Task: Navigation Systems Lab',s:'Hiwot G. (Avionics) · Dawit S. assigned · Mar 28',dp:'Avionics',dc:'rgba(92,53,194,.15)',dt:'#c4b5fd',tm:'3h ago'},
+    {cls:'new',bg:'rgba(232,160,32,.1)',ico:'📝',t:'Curriculum Update: Fuel & Combustion (PP)',s:'Bereket T. submitted for approval — v3 update',dp:'Powerplant',dc:'rgba(192,57,43,.15)',dt:'#fc8181',tm:'5h ago'},
+    {cls:'urg',bg:'rgba(192,57,43,.1)',ico:'🔴',t:'Engine Run-up Procedure — OVERDUE',s:'Powerplant · Tesfaye W. · 3 days past deadline',dp:'Powerplant',dc:'rgba(192,57,43,.15)',dt:'#fc8181',tm:'6h ago'},
+    {cls:'',bg:'rgba(26,122,70,.1)',ico:'✅',t:'Wing Spar Inspection — Completed',s:'Airframe · Sara T. · Pending your approval',dp:'Airframe',dc:'rgba(26,122,70,.15)',dt:'#4ade80',tm:'1d ago'},
+    {cls:'',bg:'rgba(0,131,143,.1)',ico:'📊',t:'Structure Curriculum: Fuselage Construction',s:'Yonas A. submitted — awaiting review',dp:'Structure',dc:'rgba(0,131,143,.15)',dt:'#2dd4bf',tm:'2d ago'},
+  ];
+  const as=document.getElementById('amt-stream');
+  if(as)as.innerHTML=stream.map(s=>`<div class="upd ${s.cls}"><div class="upd-ic" style="background:${s.bg}">${s.ico}</div><div class="upd-b"><h4>${s.t}</h4><p>${s.s}</p></div><div class="upd-m"><span class="upd-dp" style="background:${s.dc};color:${s.dt}">${s.dp}</span><div class="upd-tm">${s.tm}</div></div></div>`).join('');
+  // AMT curriculum pending
+  const pend=[
+    {dp:'Powerplant',m:'Fuel & Combustion',ci:'Bereket T.',note:'Content revision + new lab procedures',dc:'rgba(192,57,43,.15)',dt:'#fc8181'},
+    {dp:'Avionics',m:'Navigation Systems',ci:'Hiwot G.',note:'Updated FMS content per ICAO DOC 9684',dc:'rgba(92,53,194,.15)',dt:'#c4b5fd'},
+    {dp:'Structure',m:'Fuselage Construction',ci:'Yonas A.',note:'First submission — new module addition',dc:'rgba(0,131,143,.15)',dt:'#2dd4bf'},
+  ];
+  const ac=document.getElementById('amt-curric');
+  if(ac)ac.innerHTML=pend.map(p=>`<div class="cc pend"><div class="cc-h"><div><div class="cc-t">${p.m}</div><div class="cc-m">By ${p.ci} · <span style="background:${p.dc};color:${p.dt};font-family:'DM Mono',monospace;font-size:.56rem;padding:.07rem .32rem;border-radius:3px">${p.dp}</span></div></div><span class="b by">Pending</span></div><div style="font-size:.73rem;color:var(--muted);margin-bottom:.45rem">${p.note}</div><div class="cc-act"><button class="btn bsc bsm" onclick="approveCC(this)">✓ Approve</button><button class="btn bdn bsm" onclick="returnCC(this)">✗ Return</button></div></div>`).join('');
+}
+
+// ════════════════════════════════════════
+//  CI DASHBOARD
+// ════════════════════════════════════════
+function buildCI(){
+  const d=DD[cRole], r=RD[cRole];
+  document.getElementById('ci-bc').textContent=`EAU / ${d.nm} / Dashboard`;
+  document.getElementById('ci-h1').textContent=`${d.ico} ${d.nm} Department`;
+  document.getElementById('ci-sub').textContent=`Chief Instructor: ${r.nm} · Semester 2, 2024/25`;
+  document.getElementById('ci-prh-t').textContent=`${d.nm} Dept Dashboard — EAU Manage X`;
+  document.getElementById('ci-prh-s').textContent=`Ethiopian Aviation University · Chief Instructor: ${r.nm}`;
+  document.getElementById('ci-prft-l').textContent=`EAU Manage X · ${d.nm} CI Report · Confidential`;
+  const active=d.tasks.filter(t=>t.st!=='dn').length;
+  document.getElementById('ci-kpis').innerHTML=`
+    <div class="kc cg"><div class="kl">Dept Score</div><div class="kv tg">${d.sc}</div><div class="kd"><span class="up">▲ 1.8</span> this month</div><div class="kico">⭐</div></div>
+    <div class="kc cgr"><div class="kl">Active Tasks</div><div class="kv tgr">${active}</div><div class="kd">My department</div><div class="kico">📋</div></div>
+    <div class="kc cr"><div class="kl">Overdue</div><div class="kv tr">${d.ov}</div><div class="kd"><span class="dn">Needs attention</span></div><div class="kico">⚠️</div></div>
+    <div class="kc cb"><div class="kl">Curriculum</div><div class="kv tb">${d.curr}%</div><div class="kd"><span class="up">▲ 5%</span> this month</div><div class="kico">📚</div></div>`;
+  // Overview
+  const op=document.getElementById('ci-ov-prog');
+  if(op)op.innerHTML=`<div class="prog"><div class="pl"><span>Curriculum Completion</span><span>${d.curr}%</span></div><div class="pt"><div class="pf ${d.pf}" style="width:${d.curr}%"></div></div></div>`+d.mods.map((m,i)=>`<div class="prog"><div class="pl"><span style="font-size:.72rem">${m}</span><span>${d.modPct[i]}%</span></div><div class="pt"><div class="pf ${d.pf}" style="width:${d.modPct[i]}%"></div></div></div>`).join('');
+  const cnt={ov:0,ds:0,ot:0,dn:0};
+  d.tasks.forEach(t=>cnt[t.st]++);
+  const ot=document.getElementById('ci-ov-tasks');
+  if(ot)ot.innerHTML=`<div style="font-size:.76rem;font-weight:600;margin-bottom:.65rem">Task Breakdown</div>
+    <div class="fsb" style="margin-bottom:.35rem;font-size:.78rem"><span>🔴 Overdue</span><span class="mono tr">${cnt.ov}</span></div>
+    <div class="fsb" style="margin-bottom:.35rem;font-size:.78rem"><span>🟡 Due Soon</span><span class="mono tg">${cnt.ds}</span></div>
+    <div class="fsb" style="margin-bottom:.35rem;font-size:.78rem"><span>🟢 On Track</span><span class="mono tgr">${cnt.ot}</span></div>
+    <div class="fsb" style="font-size:.78rem"><span>🔵 Completed</span><span class="mono tb">${cnt.dn}</span></div>`;
+  const or=document.getElementById('ci-ov-rem');
+  if(or)or.innerHTML=`<div style="font-size:.76rem;font-weight:600;margin-bottom:.65rem">🔔 Active Reminders</div><div class="rl">
+    ${d.tasks.filter(t=>t.st==='ov').map(t=>`<div class="ri"><div class="rd r-over">!</div><div class="ri-info"><h4>${t.t.slice(0,30)}…</h4><p>OVERDUE · Email + Push every 24h</p></div></div>`).join('')}
+    ${d.tasks.filter(t=>t.st==='ds').map(t=>`<div class="ri"><div class="rd r-pend">3d</div><div class="ri-info"><h4>${t.t.slice(0,30)}…</h4><p>3-day reminder sent · ${t.dl}</p></div></div>`).join('')}
+    <div class="ri"><div class="rd r-sent">7d</div><div class="ri-info"><h4>All upcoming tasks</h4><p>7-day reminders scheduled</p></div></div></div>`;
+  buildStudents(); buildTeachers(); buildClasses(); buildTasks('all'); buildCurric(); buildReminders();
+  // Modal dropdowns
+  const asel=document.getElementById('mt-asgn');
+  if(asel)asel.innerHTML='<option value="">— Select —</option>'+d.teachers.map(t=>`<option>${t.nm}</option>`).join('');
+  const msel=document.getElementById('mc-mod');
+  if(msel)msel.innerHTML='<option value="">— Select module —</option>'+d.mods.map(m=>`<option>${m}</option>`).join('');
+  const csel=document.getElementById('ms-cl');
+  if(csel)csel.innerHTML='<option value="">— Select class —</option>'+d.classes.map(c=>`<option>${c.nm}</option>`).join('');
+}
+
+function buildStudents(){
+  const d=DD[cRole];
+  const g=document.getElementById('ci-st-grid');
+  if(!g)return;
+  g.innerHTML=d.students.map(s=>{
+    const ini=s.nm.split(' ').map(x=>x[0]).join('').slice(0,2);
+    const col=s.risk?'#c0392b':s.gpa>=3.5?'#1a7a46':'#1565c0';
+    return `<div class="pcard"><div class="pcard-av" style="background:${col}">${ini}</div><div><div class="pcard-n">${s.nm}</div><div class="pcard-d">${s.id} · ${s.cl} · ${s.yr}</div><div class="pcard-d">GPA: <strong style="color:${s.gpa>=3.5?'#4ade80':'#e8a020'}">${s.gpa}</strong> &nbsp;|&nbsp; Att: <strong>${s.att}%</strong></div></div><div class="pcard-s">${s.risk?'<span class="b br">At Risk</span>':'<span class="b bg">Good</span>'}</div></div>`;
+  }).join('');
+}
+
+function buildTeachers(){
+  const d=DD[cRole];
+  const g=document.getElementById('ci-tc-grid');
+  if(!g)return;
+  g.innerHTML=d.teachers.map(t=>`<div class="pcard"><div class="pcard-av" style="background:${t.col}">${t.av}</div><div><div class="pcard-n">${t.nm}</div><div class="pcard-d">Subject: ${t.subj}</div><div class="pcard-d">Tasks: <strong>${t.tasks}</strong> &nbsp;|&nbsp; Score: <strong style="color:${t.score>=90?'#4ade80':'#e8a020'}">${t.score}</strong></div></div><div class="pcard-s"><span class="b ${t.score>=90?'bg':'by'}">${t.score>=90?'Excellent':'Good'}</span></div></div>`).join('');
+}
+
+function buildClasses(){
+  const d=DD[cRole];
+  const t=document.getElementById('ci-cl-tbl');
+  if(!t)return;
+  const rows=d.classes.map(c=>`<tr><td><div class="tm">${c.nm}</div></td><td>${c.inst}</td><td class="mono" style="font-size:.72rem">${c.sched}</td><td class="mono" style="font-size:.72rem">${c.rm}</td><td>${c.cnt} students</td><td><span class="b bg">Active</span></td><td><button class="btn bgh bsm" onclick="showToast('Class details for ${c.nm}')">View</button></td></tr>`).join('');
+  t.innerHTML=`<thead><tr><th>Class</th><th>Instructor</th><th>Schedule</th><th>Room</th><th>Students</th><th>Status</th><th></th></tr></thead><tbody>${rows}</tbody>`;
+}
+
+function buildTasks(filter){
+  const d=DD[cRole];
+  const list=document.getElementById('ci-tk-list');
+  if(!list)return;
+  const tasks=filter==='all'?d.tasks:d.tasks.filter(t=>t.st===filter);
+  if(!tasks.length){list.innerHTML='<div style="text-align:center;color:var(--muted);padding:2rem;font-size:.83rem">No tasks in this filter.</div>';return;}
+  const stCls={ov:'ov',ds:'ds',ot:'ot',dn:'dn'};
+  const stB={ov:'br',ds:'by',ot:'bg',dn:'bb'};const stL={ov:'Overdue',ds:'Due Soon',ot:'On Track',dn:'Completed'};
+  const prB={critical:'pcrit',high:'ph_p',medium:'pm',low:'pl2'};
+  const catB={cu:'tc-cu',cl:'tc-cl',mn:'tc-mn',ev:'tc-ev',ad:'tc-ad'};
+  const catL={cu:'Curriculum',cl:'Class Prep',mn:'Maintenance',ev:'Student Eval',ad:'Admin'};
+  list.innerHTML=tasks.map(t=>`<div class="tc ${stCls[t.st]}"><div class="tc-r1"><div class="tc-t">${t.t}</div><span class="b ${stB[t.st]}">${stL[t.st]}</span></div><div style="font-size:.73rem;color:var(--muted);margin-bottom:.42rem">${t.desc}</div><div class="tc-r2"><span class="tcat ${catB[t.cat]}">${catL[t.cat]}</span><span class="prio ${prB[t.prio]}">${t.prio}</span><div class="tc-as">👤 ${t.who}</div><div class="tc-dl">📅 ${t.dl}</div></div></div>`).join('');
+}
+
+function buildCurric(){
+  const d=DD[cRole];
+  const list=document.getElementById('ci-cu-list');
+  if(!list)return;
+  const stB={appd:'bg',pend:'by',retd:'br'};const stL={appd:'Approved',pend:'Pending',retd:'Returned'};
+  list.innerHTML=d.curric.map((c,i)=>`<div class="cc ${c.st}"><div class="cc-h"><div><div class="cc-t">${c.m}</div><div class="cc-m">${c.note}</div></div><span class="b ${stB[c.st]}">${stL[c.st]}</span></div><div class="prog" style="margin-top:.55rem"><div class="pl"><span style="font-size:.7rem">Completion</span><span>${d.modPct[i]}%</span></div><div class="pt"><div class="pf ${d.pf}" style="width:${d.modPct[i]}%"></div></div></div>${c.st==='retd'?`<button class="btn bgo bsm" style="margin-top:.55rem" onclick="openCurrModal()">📤 Resubmit Updated Version</button>`:''}</div>`).join('');
+}
+
+function buildReminders(){
+  const d=DD[cRole];
+  const list=document.getElementById('ci-rm-list');
+  if(!list)return;
+  const items=[];
+  d.tasks.forEach(t=>{
+    if(t.st==='ov')items.push({cls:'r-over',lbl:'!',t:`OVERDUE: ${t.t}`,s:'Reminder every 24h · Email + Push + In-App · AMT Head notified'});
+    else if(t.st==='ds')items.push({cls:'r-pend',lbl:'3d',t:t.t,s:`3-day reminder sent to ${t.who} · ${t.dl}`});
+  });
+  items.push({cls:'r-sent',lbl:'7d',t:'Upcoming Tasks — 7-day reminders',s:'Scheduled for all active tasks · Email + In-App'});
+  items.push({cls:'r-sent',lbl:'15d',t:'New Tasks Created This Week',s:'15-day reminders confirmed · Email + Push'});
+  list.innerHTML=items.map(i=>`<div class="ri"><div class="rd ${i.cls}">${i.lbl}</div><div class="ri-info"><h4>${i.t}</h4><p>${i.s}</p></div></div>`).join('');
+}
+
+function filterTasks(f,el){
+  document.querySelectorAll('#tbc-tk .btn').forEach(b=>{if(!b.textContent.includes('New Task')){b.className='btn bgh bsm';}});
+  if(el)el.className='btn bpr bsm';
+  buildTasks(f);
+}
+
+function ciTab(el,tab){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.tbc').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('tbc-'+tab).classList.add('on');
+}
+
+// ════════════════════════════════════════
+//  NOTIFICATIONS
+// ════════════════════════════════════════
+function buildNotifs(){
+  const ns=NOTIFS[cRole]||[];
+  const cnt=ns.filter(n=>n.u).length;
+  document.getElementById('ncnt').textContent=cnt;
+  document.getElementById('nlist').innerHTML=ns.map(n=>`<div class="nit ${n.u?'unr':''}"><div style="font-size:.95rem;margin-bottom:.18rem">${n.ico}</div><div class="ni-t">${n.t}</div><div class="ni-s">${n.s}</div><div class="ni-row"><span class="ni-dp" style="background:${n.dc};color:${n.dt}">${n.dp}</span><span class="ni-tm">Just now</span></div></div>`).join('');
+}
+function toggleNotif(){
+  notifOpen=!notifOpen;
+  document.getElementById('ndwr').classList.toggle('on',notifOpen);
+}
+
+// ════════════════════════════════════════
+//  MODALS
+// ════════════════════════════════════════
+function openM(id){document.getElementById(id).classList.add('on');}
+function closeM(id){document.getElementById(id).classList.remove('on');}
+function openTaskModal(){
+  const d=new Date();d.setDate(d.getDate()+14);
+  document.getElementById('mt-dl').value=d.toISOString().split('T')[0];
+  document.getElementById('m-task-h').textContent=`📋 New Task — ${DD[cRole]?.nm||''} Department`;
+  openM('m-task');
+}
+function openCurrModal(){openM('m-curr');}
+function openStudModal(){openM('m-stud');}
+function toggleR(el){el.classList.toggle('on');el.querySelector('.rb').textContent=el.classList.contains('on')?'✓':'';}
+
+function submitTask(){
+  const title=document.getElementById('mt-title').value.trim();
+  const dl=document.getElementById('mt-dl').value;
+  const who=document.getElementById('mt-asgn').value;
+  const prio=document.getElementById('mt-prio').value;
+  const cat=document.getElementById('mt-cat').value;
+  const notify=document.getElementById('mt-notif').value;
+  const desc=document.getElementById('mt-desc').value;
+  if(!title){alert('Please enter a task title.');return;}
+  if(!dl){alert('Please set a deadline.');return;}
+  const d=DD[cRole];
+  const dlStr=new Date(dl).toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+  d.tasks.unshift({t:title,who:who||'Unassigned',cat,prio,st:'ot',dl:dlStr,desc:desc||'No description.'});
+  if(notify==='yes'){
+    NOTIFS.amt.unshift({ico:'📋',t:`New Task: ${title}`,s:`${d.nm}: ${RD[cRole].nm} → ${who||'Unassigned'} · Due ${dlStr}`,dp:d.nm,dc:`rgba(100,100,100,.15)`,dt:d.hex,u:true});
+    NOTIFS.admin.unshift({ico:'📋',t:`New Task: ${title}`,s:`${d.nm} dept · ${RD[cRole].nm} added task`,dp:d.nm,dc:`rgba(100,100,100,.15)`,dt:d.hex,u:true});
+    // Add to AMT stream
+    const as=document.getElementById('amt-stream');
+    if(as){const el=document.createElement('div');el.className='upd new';el.innerHTML=`<div class="upd-ic" style="background:rgba(232,160,32,.1)">📋</div><div class="upd-b"><h4>New Task: ${title}</h4><p>${d.nm} dept · ${RD[cRole].nm} · ${who||'Unassigned'} · Due ${dlStr}</p></div><div class="upd-m"><span class="upd-dp" style="background:rgba(100,100,100,.15);color:${d.hex}">${d.nm}</span><div class="upd-tm">Just now</div></div>`;as.insertBefore(el,as.firstChild);}
+  }
+  buildCI(); closeM('m-task');
+  document.getElementById('mt-title').value='';document.getElementById('mt-desc').value='';
+  showToast(`✅ Task "${title.slice(0,32)}…" created${notify==='yes'?' · AMT Head notified':''}`);
+}
+
+function submitCurr(){
+  const mod=document.getElementById('mc-mod').value;
+  const sum=document.getElementById('mc-sum').value.trim();
+  if(!mod){alert('Please select a module.');return;}
+  if(!sum){alert('Please describe the changes.');return;}
+  const d=DD[cRole];
+  const idx=d.curric.findIndex(c=>c.m===mod);
+  if(idx>=0)d.curric[idx].st='pend';
+  NOTIFS.amt.unshift({ico:'📝',t:`Curriculum Update: ${mod} (${d.nm})`,s:`${RD[cRole].nm} submitted — awaiting your review`,dp:d.nm,dc:`rgba(100,100,100,.15)`,dt:d.hex,u:true});
+  const as=document.getElementById('amt-stream');
+  if(as){const el=document.createElement('div');el.className='upd new';el.innerHTML=`<div class="upd-ic" style="background:rgba(232,160,32,.1)">📝</div><div class="upd-b"><h4>Curriculum Update: ${mod}</h4><p>${d.nm} dept · ${RD[cRole].nm} submitted for review</p></div><div class="upd-m"><span class="upd-dp" style="background:rgba(100,100,100,.15);color:${d.hex}">${d.nm}</span><div class="upd-tm">Just now</div></div>`;as.insertBefore(el,as.firstChild);}
+  buildCI(); closeM('m-curr');
+  document.getElementById('mc-sum').value='';document.getElementById('mc-notes').value='';
+  showToast(`📤 Curriculum update for "${mod}" submitted to AMT Head`);
+}
+
+function submitStud(){
+  const nm=document.getElementById('ms-nm').value.trim();
+  const id=document.getElementById('ms-id').value.trim();
+  if(!nm||!id){alert('Please fill in Name and Student ID.');return;}
+  const d=DD[cRole];
+  const cl=document.getElementById('ms-cl').value||d.classes[0]?.nm||'';
+  const yr=document.getElementById('ms-yr').value;
+  d.students.push({nm,id,cl,yr,gpa:0.0,att:100,risk:false});
+  buildStudents(); closeM('m-stud');
+  document.getElementById('ms-nm').value='';document.getElementById('ms-id').value='';
+  showToast(`✅ Student "${nm}" added to ${d.nm} department`);
+}
+
+function approveCC(el){
+  const card=el.closest('.cc');
+  card.className='cc appd';
+  card.querySelector('.b').className='b bg';
+  card.querySelector('.b').textContent='Approved';
+  el.closest('.cc-act').remove();
+  showToast('✅ Curriculum update approved — CI has been notified');
+}
+function returnCC(el){
+  const card=el.closest('.cc');
+  card.className='cc retd';
+  card.querySelector('.b').className='b br';
+  card.querySelector('.b').textContent='Returned';
+  el.closest('.cc-act').remove();
+  showToast('↩ Curriculum update returned with notes — CI notified');
+}
+
+// ════════════════════════════════════════
+//  PRINT
+// ════════════════════════════════════════
+const PRINT_OPTS = {
+  admin:[{id:'admin-dash',ico:'📊',t:'Executive Dashboard',s:'KPIs, 4 departments, task overview'},{id:'admin-rep',ico:'📄',t:'Reports Overview',s:'All export options and report index'},{id:'admin-sys',ico:'🏗',t:'System Architecture',s:'DB schema, features, automation'}],
+  amt:[{id:'amt-dash',ico:'📥',t:'AMT Head Dashboard',s:'CI updates stream, pending approvals'},{id:'amt-rep',ico:'📊',t:'Department Reports',s:'Task statistics by department'}],
+  ci:[{id:'ci-dash',ico:'📋',t:'Department Dashboard',s:'Full dept report with tasks, curriculum'},{id:'ci-dash',ico:'👥',t:'Students Report',s:'All students, GPA, attendance, risk flags'}]
+};
+let selPrint='';
+function openPrint(){
+  const role=['admin','amt'].includes(cRole)?cRole:'ci';
+  const opts=PRINT_OPTS[role];
+  selPrint=cPage;
+  document.getElementById('pm-opts').innerHTML=opts.map((o,i)=>`<div class="pm-opt ${i===0?'sel':''}" onclick="selPO(this,'${o.id}')"><div style="font-size:1.2rem;flex-shrink:0">${o.ico}</div><div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:.88rem">${o.t}</div><div style="font-size:.67rem;color:var(--muted);margin-top:.1rem">${o.s}</div></div></div>`).join('');
+  selPrint=opts[0].id;
+  openM('m-print');
+}
+function selPO(el,id){
+  document.querySelectorAll('.pm-opt').forEach(o=>o.classList.remove('sel'));
+  el.classList.add('sel'); selPrint=id;
+}
+function executePrint(){
+  const ts=document.getElementById('pm-ts').value==='y';
+  const logo=document.getElementById('pm-logo').value==='y';
+  const bw=document.getElementById('pm-color').value==='bw';
+  const now=new Date();
+  const dtStr=now.toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'})+' at '+now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  document.querySelectorAll('[id^="ptm-"]').forEach(el=>{if(ts)el.textContent='Printed: '+dtStr;});
+  document.querySelectorAll('[id^="pft-"]').forEach(el=>{el.textContent=dtStr;});
+  document.querySelectorAll('.prh,.prft').forEach(h=>h.style.display='none');
+  if(logo){const ph=document.getElementById('prh-'+selPrint);if(ph)ph.style.display='flex';const pft=document.getElementById('pft-'+selPrint)?.closest('.prft');if(pft)pft.style.display='flex';}
+  let bwEl=document.getElementById('bw-sty');
+  if(bw){if(!bwEl){bwEl=document.createElement('style');bwEl.id='bw-sty';bwEl.media='print';bwEl.textContent='*{filter:grayscale(100%)!important}';document.head.appendChild(bwEl);}}else if(bwEl)bwEl.remove();
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on','ptgt'));
+  const tgt=document.getElementById('pg-'+selPrint);
+  if(tgt){tgt.classList.add('on','ptgt');}
+  closeM('m-print');
+  setTimeout(()=>{
+    window.print();
+    setTimeout(()=>{
+      document.querySelectorAll('.page').forEach(p=>p.classList.remove('on','ptgt'));
+      const restore=document.getElementById('pg-'+cPage);
+      if(restore)restore.classList.add('on');
+      document.querySelectorAll('.prh,.prft').forEach(h=>h.style.display='none');
+    },600);
+  },120);
+}
+
+// ════════════════════════════════════════
+//  TOAST
+// ════════════════════════════════════════
+function showToast(msg){
+  const t=document.createElement('div');
+  t.style.cssText='position:fixed;bottom:1.4rem;right:1.4rem;background:#1a7a46;color:white;padding:.72rem 1.2rem;border-radius:9px;font-size:.82rem;z-index:999;box-shadow:0 8px 28px rgba(0,0,0,.35);animation:fadeIn .28s ease;max-width:350px;';
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),3500);
+}
+
+// ════════════════════════════════════════
+//  KEYBOARD
+// ════════════════════════════════════════
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&document.getElementById('sl').classList.contains('on'))doLogin();
+  if(e.key==='Escape'){closeM('m-task');closeM('m-curr');closeM('m-stud');closeM('m-print');if(notifOpen)toggleNotif();}
+  if((e.ctrlKey||e.metaKey)&&e.key==='p'){e.preventDefault();openPrint();}
+});
+</script>
+</body>
+</html>
